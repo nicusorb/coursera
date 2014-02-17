@@ -119,10 +119,10 @@ public class Deque<Item> implements Iterable<Item> {
         checkEmptyDeque();
         Item item = firstItem.item;
         firstItem = firstItem.next;
-        if (!isEmpty())
-            firstItem.previous = null;
-        else
+        if (firstItem == null)
             lastItem = null;
+        else
+            firstItem.previous = null;
         numberOfItems--;
         return item;
     }
@@ -134,10 +134,10 @@ public class Deque<Item> implements Iterable<Item> {
         checkEmptyDeque();
         Item item = lastItem.item;
         lastItem = lastItem.previous;
-        if (!isEmpty())
-            lastItem.next = null;
-        else
+        if (lastItem == null)
             firstItem = null;
+        else
+            lastItem.next = null;
         numberOfItems--;
         return item;
     }
