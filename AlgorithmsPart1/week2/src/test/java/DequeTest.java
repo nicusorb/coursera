@@ -1,8 +1,10 @@
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class DequeTest {
     private Deque<String> deque = new Deque<String>();
@@ -80,6 +82,7 @@ public class DequeTest {
 
         assertEquals(item1, "item1");
         assertEquals(item2, "item2");
+        assertEquals(deque.size(), 0);
     }
 
     @Test
@@ -91,5 +94,33 @@ public class DequeTest {
 
         assertEquals(item1, "item1");
         assertEquals(item2, "item2");
+    }
+
+    @Test
+    public void testIterator() throws Exception {
+        int i = 1;
+        deque.addFirst("3");
+        deque.addFirst("2");
+        deque.addFirst("1");
+        deque.addLast("4");
+        deque.addLast("5");
+
+        for (String item : deque) {
+            assertEquals(item, String.valueOf(i++));
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void iteratorRemove_throwsException() throws Exception {
+        deque.addFirst("item");
+
+        Iterator<String> it = deque.iterator();
+        it.remove();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void iteratorNext_throwsExcepctionIfNoMoreElements() throws Exception {
+        Iterator<String> it = deque.iterator();
+        it.next();
     }
 }

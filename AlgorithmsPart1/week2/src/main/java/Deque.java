@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Dequeue. A double-ended queue or deque (pronounced "deck") is a generalization of a stack and a queue that supports
@@ -45,7 +46,7 @@ public class Deque<Item> implements Iterable<Item> {
      * @return is the deque empty?
      */
     public boolean isEmpty() {
-        return firstItem == null;
+        return firstItem == null || lastItem == null;
     }
 
     /**
@@ -66,7 +67,7 @@ public class Deque<Item> implements Iterable<Item> {
         numberOfItems++;
         if (isEmpty()) {
             lastItem = firstItem;
-        } else {
+        } else if (oldFirstItem != null) {
             oldFirstItem.previous = firstItem;
         }
     }
@@ -110,6 +111,7 @@ public class Deque<Item> implements Iterable<Item> {
         firstItem = firstItem.next;
         if (!isEmpty())
             firstItem.previous = null;
+        numberOfItems--;
         return item;
     }
 
@@ -120,8 +122,10 @@ public class Deque<Item> implements Iterable<Item> {
         checkEmptyDeque();
         Item item = lastItem.item;
         lastItem = lastItem.previous;
-        lastItem.next = null;
+        if (lastItem != null)
+            lastItem.next = null;
         checkDequeForNull();
+        numberOfItems--;
         return item;
     }
 
@@ -141,7 +145,38 @@ public class Deque<Item> implements Iterable<Item> {
      */
     @Override
     public Iterator<Item> iterator() {
-        return null;
+        return new DequeIterator(firstItem);
+    }
+
+    private class DequeIterator implements Iterator<Item> {
+        private Node<Item> currentNode;
+
+        public DequeIterator(Node<Item> firstItem) {
+            this.currentNode = firstItem;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public Item next() {
+            checkForElements();
+            Item item = currentNode.item;
+            currentNode = currentNode.next;
+            return item;
+        }
+
+        private void checkForElements() {
+            if (currentNode == null)
+                throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     public static void main(String[] args)   // unit testing
