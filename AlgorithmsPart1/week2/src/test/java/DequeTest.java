@@ -150,7 +150,7 @@ public class DequeTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void iteratorNext_throwsExcepctionIfNoMoreElements() throws Exception {
+    public void iteratorNext_throwsExceptionIfNoMoreElements() throws Exception {
         Iterator<String> it = deque.iterator();
         it.next();
     }
