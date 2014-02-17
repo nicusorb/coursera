@@ -97,6 +97,18 @@ public class DequeTest {
     }
 
     @Test
+    public void testAddRemoveFirstAndLast() throws Exception {
+        deque.addFirst("item1");
+        String item1 = deque.removeLast();
+        deque.addLast("item2");
+        deque.addLast("item3");
+        String item2 = deque.removeFirst();
+
+        assertEquals(item1, "item1");
+        assertEquals(item2, "item2");
+    }
+
+    @Test
     public void testIterator() throws Exception {
         int i = 1;
         deque.addFirst("3");

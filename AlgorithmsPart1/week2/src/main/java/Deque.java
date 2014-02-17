@@ -60,36 +60,46 @@ public class Deque<Item> implements Iterable<Item> {
      * insert the item at the front
      */
     public void addFirst(Item item) {
-        checkItemForNull(item);
-        Node<Item> oldFirstItem = firstItem;
-        firstItem = createItem(item);
-        firstItem.next = oldFirstItem;
+        validate(item);
+        if (isEmpty())
+            addItemToEmptyDeque(item);
+        else
+            addItemToTheBeggingOfTheDeque(item);
         numberOfItems++;
-        if (isEmpty()) {
-            lastItem = firstItem;
-        } else if (oldFirstItem != null) {
-            oldFirstItem.previous = firstItem;
-        }
     }
 
     /**
      * insert the item at the end
      */
     public void addLast(Item item) {
-        checkItemForNull(item);
-        Node<Item> node = createItem(item);
-        if (firstItem == null) {
-            firstItem = node;
-            lastItem = node;
-        } else {
-            lastItem.next = node;
-            node.previous = lastItem;
-            lastItem = node;
-        }
+        validate(item);
+        if (isEmpty())
+            addItemToEmptyDeque(item);
+        else
+            addItemToTheEndOfTheDeque(item);
         numberOfItems++;
     }
 
-    private void checkItemForNull(Item item) {
+    private void addItemToEmptyDeque(Item item) {
+        firstItem = createItem(item);
+        lastItem = firstItem;
+    }
+
+    private void addItemToTheBeggingOfTheDeque(Item item) {
+        Node<Item> oldFirstItem = firstItem;
+        firstItem = createItem(item);
+        firstItem.next = oldFirstItem;
+        oldFirstItem.previous = firstItem;
+    }
+
+    private void addItemToTheEndOfTheDeque(Item item) {
+        Node<Item> node = createItem(item);
+        lastItem.next = node;
+        node.previous = lastItem;
+        lastItem = node;
+    }
+
+    private void validate(Item item) {
         if (item == null)
             throw new NullPointerException();
     }
@@ -111,6 +121,8 @@ public class Deque<Item> implements Iterable<Item> {
         firstItem = firstItem.next;
         if (!isEmpty())
             firstItem.previous = null;
+        else
+            lastItem = null;
         numberOfItems--;
         return item;
     }
@@ -122,9 +134,10 @@ public class Deque<Item> implements Iterable<Item> {
         checkEmptyDeque();
         Item item = lastItem.item;
         lastItem = lastItem.previous;
-        if (lastItem != null)
+        if (!isEmpty())
             lastItem.next = null;
-        checkDequeForNull();
+        else
+            firstItem = null;
         numberOfItems--;
         return item;
     }
@@ -132,12 +145,6 @@ public class Deque<Item> implements Iterable<Item> {
     private void checkEmptyDeque() {
         if (firstItem == null)
             throw new UnsupportedOperationException();
-    }
-
-    private void checkDequeForNull() {
-        if (lastItem == null) {
-            firstItem = null;
-        }
     }
 
     /**
