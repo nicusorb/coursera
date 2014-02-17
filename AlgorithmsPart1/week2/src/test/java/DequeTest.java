@@ -122,6 +122,25 @@ public class DequeTest {
         }
     }
 
+    @Test
+    public void testMultipleIterators() throws Exception {
+        int i = 1;
+        deque.addFirst("3");
+        deque.addFirst("2");
+        deque.addFirst("1");
+        deque.addLast("4");
+        deque.addLast("5");
+
+        for (String item : deque) {
+            assertEquals(item, String.valueOf(i++));
+            int k = 1;
+
+            for (String innerItem : deque) {
+                assertEquals(innerItem, String.valueOf(k++));
+            }
+        }
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void iteratorRemove_throwsException() throws Exception {
         deque.addFirst("item");
