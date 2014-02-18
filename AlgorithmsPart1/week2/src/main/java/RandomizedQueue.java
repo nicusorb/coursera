@@ -7,7 +7,6 @@ import java.util.Random;
  * is chosen uniformly at random from items in the data structure.
  */
 public class RandomizedQueue<Item> implements Iterable<Item> {
-    private int maxSize = 10;
     private Item[] items;
     private int pos = 0;
 
@@ -15,7 +14,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * construct an empty randomized queue
      */
     public RandomizedQueue() {
-        items = createNewArray(maxSize);
+        items = createNewArray(10);
     }
 
     /**
@@ -37,30 +36,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      */
     public void enqueue(Item item) {
         validateItem(item);
-        if (queueIsFull()) {
-            resizeQueue();
+        if (arrayIsFull()) {
+            resize(items.length * 2);
         }
         items[pos++] = item;
-    }
-
-    private void validateItem(Item item) {
-        if (item == null)
-            throw new NullPointerException();
-    }
-
-    private boolean queueIsFull() {
-        return pos == maxSize;
-    }
-
-    private void resizeQueue() {
-        maxSize *= 2;
-        Item[] newItems = createNewArray(maxSize);
-        System.arraycopy(items, 0, newItems, 0, items.length);
-        items = newItems;
-    }
-
-    private Item[] createNewArray(int size) {
-        return (Item[]) new Object[size];
     }
 
     /**
@@ -73,7 +52,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         shiftAllElementsOnePositionRightStartingFrom(randomPos);
         clearLastItemFromArray();
         pos--;
+
+        if (arrayIsAQuarterFull())
+            resize(items.length / 2);
         return item;
+    }
+
+    private void validateItem(Item item) {
+        if (item == null)
+            throw new NullPointerException();
+    }
+
+    private boolean arrayIsFull() {
+        return pos == items.length;
+    }
+
+    private void resize(int size) {
+        Item[] newItems = createNewArray(size);
+        System.arraycopy(items, 0, newItems, 0, pos);
+        items = newItems;
+    }
+
+    private Item[] createNewArray(int size) {
+        return (Item[]) new Object[size];
+    }
+
+    private boolean arrayIsAQuarterFull() {
+        return pos > 0 && pos == items.length / 4;
     }
 
     /**
@@ -108,5 +113,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Iterator<Item> iterator() {
         return null;
     }
-//    public static void main(String[] args)   // unit testing
+
+    public static void main(String[] args) {
+    }
 }

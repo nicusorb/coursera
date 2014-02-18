@@ -85,7 +85,11 @@ public class RandomizedQueueTest {
 //        for (int i = 0; i < 5; i++) {
 //            sut.enqueue(i);
 //        }
+//        for (int i = 0; i < 3; i++) {
+//            sut.dequeue();
+//        }
 //
+//        assertEquals(5, sut.size());
 //    }
 
     @Test
