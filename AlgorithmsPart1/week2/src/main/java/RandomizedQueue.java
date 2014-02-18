@@ -121,7 +121,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int shuffledArrayPos = 0;
 
         RandomizedQueueIterator() {
-            shuffledArray = (Item[]) new Object[size()];
+            shuffledArray = createNewArray(size());
             System.arraycopy(items, 0, shuffledArray, 0, shuffledArray.length);
 
             for (int i = 0; i < shuffledArray.length; i++)
