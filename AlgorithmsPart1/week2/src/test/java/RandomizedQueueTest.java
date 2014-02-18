@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 public class RandomizedQueueTest {
@@ -62,8 +64,10 @@ public class RandomizedQueueTest {
         for (int i : dequeue) {
             boolean found = false;
             for (int k : toAdd) {
-                found = true;
-                break;
+                if (i == k) {
+                    found = true;
+                    break;
+                }
             }
 
             if (!found)
@@ -71,17 +75,28 @@ public class RandomizedQueueTest {
         }
     }
 
-    @Test
-    public void resizeArray_onMultipleDequeue() throws Exception {
-        for (int i = 0; i < 5; i++) {
-            sut.enqueue(i);
-        }
+    @Test(expected = NoSuchElementException.class)
+    public void whenDequeueAnEmptyQueue_throwException() throws Exception {
+        sut.dequeue();
     }
+
+//    @Test
+//    public void resizeArray_onMultipleDequeue() throws Exception {
+//        for (int i = 0; i < 5; i++) {
+//            sut.enqueue(i);
+//        }
+//
+//    }
 
     @Test
     public void sample_returnsARandomItem() throws Exception {
         sut.enqueue(1);
 
         assertEquals(new Integer(1), sut.sample());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenSampleAnEmptyQueue_throwException() throws Exception {
+        sut.sample();
     }
 }

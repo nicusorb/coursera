@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
@@ -66,6 +67,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * delete and return a random item
      */
     public Item dequeue() {
+        checkForEmptyQueue();
         int randomPos = generateARandomPositionInArray();
         Item item = items[randomPos];
         shiftAllElementsOnePositionRightStartingFrom(randomPos);
@@ -78,7 +80,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @return (but do not delete) a random item
      */
     public Item sample() {
+        checkForEmptyQueue();
         return items[generateARandomPositionInArray()];
+    }
+
+    private void checkForEmptyQueue() {
+        if (pos == 0)
+            throw new NoSuchElementException();
     }
 
     private int generateARandomPositionInArray() {
