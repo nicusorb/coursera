@@ -23,4 +23,18 @@ public class RandomizedQueueTest {
         assertEquals(1, sut.size());
         assertEquals(false, sut.isEmpty());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void whenAddingANullElement_throwException() throws Exception {
+        sut.enqueue(null);
+    }
+
+    @Test
+    public void canAddElementsMoreThanInitialSize() throws Exception {
+        for (int i = 0; i < 20; i++) {
+            sut.enqueue(i);
+        }
+
+        assertEquals(20, sut.size());
+    }
 }
