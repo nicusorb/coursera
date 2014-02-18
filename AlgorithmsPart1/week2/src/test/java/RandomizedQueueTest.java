@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
@@ -102,5 +103,28 @@ public class RandomizedQueueTest {
     @Test(expected = NoSuchElementException.class)
     public void whenSampleAnEmptyQueue_throwException() throws Exception {
         sut.sample();
+    }
+
+    @Test
+    public void iterator_returnsAllElementsInRandomOrder() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            sut.enqueue(i);
+        }
+
+        Iterator<Integer> it = sut.iterator();
+
+        while(it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void iterator_remove_throwsException() throws Exception {
+        sut.iterator().remove();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void iterator_next_throwExceptionIfThereAreNoMoreElements() throws Exception {
+        sut.iterator().next();
     }
 }

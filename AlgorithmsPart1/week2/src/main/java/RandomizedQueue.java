@@ -107,11 +107,62 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void clearLastItemFromArray() {
         items[pos] = null;
     }
-//    public Iterator<Item> iterator()         // return an independent iterator over items in random order
 
+    /**
+     * @return an independent iterator over items in random order
+     */
     @Override
     public Iterator<Item> iterator() {
-        return null;
+        return new RandomizedQueueIterator();
+    }
+
+    private class RandomizedQueueIterator implements Iterator<Item> {
+        private final Item[] shuffledArray;
+        private int shuffledArrayPos = 0;
+
+        RandomizedQueueIterator() {
+            shuffledArray = (Item[]) new Object[size()];
+            System.arraycopy(items, 0, shuffledArray, 0, shuffledArray.length);
+
+            for (int i = 0; i < shuffledArray.length; i++)
+                exchangeValues(i, generateRandomValue(i + 1));
+        }
+
+        @Override
+        public boolean hasNext() {
+            return shuffledArrayPos < shuffledArray.length;
+        }
+
+        @Override
+        public Item next() {
+            checkIfArrayIsFull();
+            return shuffledArray[shuffledArrayPos++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        private int generateRandomValue(int i) {
+            Random r = new Random();
+            return r.nextInt(i);
+        }
+
+        private void exchangeValues(int i, int j) {
+            Item temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[j];
+            shuffledArray[j] = temp;
+        }
+
+        private void checkIfArrayIsFull() {
+            if (arrayIsFull())
+                throw new NoSuchElementException();
+        }
+
+        private boolean arrayIsFull() {
+            return shuffledArrayPos == shuffledArray.length;
+        }
     }
 
     public static void main(String[] args) {
