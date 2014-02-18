@@ -1,7 +1,6 @@
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RandomizedQueueTest {
     private RandomizedQueue<Integer> sut = new RandomizedQueue<Integer>();
@@ -36,5 +35,53 @@ public class RandomizedQueueTest {
         }
 
         assertEquals(20, sut.size());
+    }
+
+    @Test
+    public void dequeue_returnsARandomItem() throws Exception {
+        sut.enqueue(1);
+
+        assertEquals(new Integer(1), sut.dequeue());
+        assertEquals(0, sut.size());
+    }
+
+    @Test
+    public void test_multipleDequeue() throws Exception {
+        int[] toAdd = {1, 2, 3, 4, 5, 6, 7};
+        int[] dequeue = new int[toAdd.length];
+
+        for (int i : toAdd) {
+            sut.enqueue(i);
+        }
+
+        for (int i = 0; i < toAdd.length; i++) {
+            dequeue[i] = sut.dequeue();
+        }
+
+        assertEquals(0, sut.size());
+        for (int i : dequeue) {
+            boolean found = false;
+            for (int k : toAdd) {
+                found = true;
+                break;
+            }
+
+            if (!found)
+                fail();
+        }
+    }
+
+    @Test
+    public void resizeArray_onMultipleDequeue() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            sut.enqueue(i);
+        }
+    }
+
+    @Test
+    public void sample_returnsARandomItem() throws Exception {
+        sut.enqueue(1);
+
+        assertEquals(new Integer(1), sut.sample());
     }
 }
