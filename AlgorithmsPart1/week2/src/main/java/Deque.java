@@ -144,7 +144,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     private void checkEmptyDeque() {
         if (firstItem == null)
-            throw new UnsupportedOperationException();
+            throw new NoSuchElementException();
     }
 
     /**

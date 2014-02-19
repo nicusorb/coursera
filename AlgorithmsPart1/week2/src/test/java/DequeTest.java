@@ -51,7 +51,7 @@ public class DequeTest {
         assertEquals(item1, "item1");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = NoSuchElementException.class)
     public void removeFirst_throwsException() throws Exception {
         deque.removeFirst();
     }
@@ -68,7 +68,7 @@ public class DequeTest {
         assertEquals(item1, "item1");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = NoSuchElementException.class)
     public void removeLast_throwsException() throws Exception {
         deque.removeLast();
     }
