@@ -105,7 +105,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private void clearLastItemFromArray() {
-        items[pos] = null;
+        items[pos - 1] = null;
     }
 
     /**
