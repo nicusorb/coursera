@@ -135,7 +135,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            checkIfArrayIsFull();
+            checkIfThereAreMoreElements();
             return shuffledArray[shuffledArrayPos++];
         }
 
@@ -155,13 +155,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             shuffledArray[j] = temp;
         }
 
-        private void checkIfArrayIsFull() {
-            if (arrayIsFull())
+        private void checkIfThereAreMoreElements() {
+            if (!areMoreElements())
                 throw new NoSuchElementException();
         }
 
-        private boolean arrayIsFull() {
-            return shuffledArrayPos == shuffledArray.length;
+        private boolean areMoreElements() {
+            return shuffledArrayPos < shuffledArray.length;
         }
     }
 
