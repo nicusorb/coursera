@@ -28,8 +28,6 @@ public class Subset {
 
         /**
          * construct an empty randomized queue
-         *
-         * @param size
          */
         public RandomizedQueue() {
             items = createNewArray(10);
