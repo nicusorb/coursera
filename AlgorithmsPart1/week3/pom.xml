@@ -4,14 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>algorithms.part1</groupId>
-    <artifactId>algorithms-parent-pom</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>algorithms.part1</groupId>
+        <artifactId>algorithms-parent-pom</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <packaging>pom</packaging>
+    <artifactId>week3</artifactId>
 
-    <modules>
-        <module>week2</module>
-        <module>week3</module>
-    </modules>
 </project>
