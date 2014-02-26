@@ -51,8 +51,8 @@ public class Brute {
 
     private void drawLines(BrutePoint p, BrutePoint q, BrutePoint r, BrutePoint s) {
         p.drawTo(q);
-        p.drawTo(r);
-        p.drawTo(s);
+        q.drawTo(r);
+        r.drawTo(s);
     }
 
     private void print(BrutePoint p, BrutePoint q, BrutePoint r, BrutePoint s) {

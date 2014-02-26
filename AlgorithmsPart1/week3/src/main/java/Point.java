@@ -60,7 +60,11 @@ public class Point implements Comparable<Point> {
         if (isVerticalPoint(that)) {
             return Double.POSITIVE_INFINITY;
         }
-        return ((double)(that.y - this.y)) / ((double)(that.x - this.x));
+        double difY = (double) (that.y - this.y);
+        if (difY == 0) {
+            return +0;
+        }
+        return difY / ((double)(that.x - this.x));
     }
 
     private boolean isVerticalPoint(Point that) {

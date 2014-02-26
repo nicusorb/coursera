@@ -18,7 +18,7 @@ public class PointTest {
     public void slopeOfAHorizontalLineSegment_isZero() throws Exception {
         Point p0 = new Point(1, 2);
 
-        assertEquals(0, p0.slopeTo(new Point(5, 2)), 0.001);
+        assertEquals(+0, p0.slopeTo(new Point(5, 2)), 0.0);
     }
 
     @Test
@@ -33,6 +33,11 @@ public class PointTest {
         Point p0 = new Point(1, 2);
 
         assertEquals(Double.NEGATIVE_INFINITY, p0.slopeTo(new Point(1, 2)), 0.001);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void slopeTo_throwException_forNullArgument() throws Exception {
+        new Point(0, 0).slopeTo(null);
     }
 
     @Test
