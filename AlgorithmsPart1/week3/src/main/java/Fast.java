@@ -4,12 +4,11 @@ import java.util.*;
 import static java.util.Collections.sort;
 
 public class Fast {
-    private List<FastPoint> points = new ArrayList<FastPoint>(1000);
+    private List<FastPoint> points = new ArrayList<FastPoint>(2000);
     private Set<EqualFastPoints> equalFastPointsSet = new LinkedHashSet<EqualFastPoints>();
 
     private void fast(String inputFilePath) {
         readData(inputFilePath);
-        sort(points);
 
         for (int i = 0; i < points.size(); i++) {
             FastPoint p = points.get(i);
