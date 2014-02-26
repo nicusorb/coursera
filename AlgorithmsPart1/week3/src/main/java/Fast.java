@@ -4,31 +4,6 @@ import java.util.*;
 import static java.util.Collections.sort;
 
 public class Fast {
-    private class EqualFastPoints {
-        private List<FastPoint> points;
-
-        private EqualFastPoints(List<FastPoint> points) {
-            this.points = points;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            EqualFastPoints that = (EqualFastPoints) o;
-
-            if (!points.equals(that.points)) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return points.hashCode();
-        }
-    }
-
     private List<FastPoint> points = new ArrayList<FastPoint>(1000);
     private Set<EqualFastPoints> equalFastPointsSet = new LinkedHashSet<EqualFastPoints>();
 
@@ -108,6 +83,29 @@ public class Fast {
             } else {
                 System.out.print(points.get(i) + " -> ");
             }
+        }
+    }
+
+    private class EqualFastPoints {
+        private List<FastPoint> points;
+
+        private EqualFastPoints(List<FastPoint> points) {
+            this.points = points;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            EqualFastPoints that = (EqualFastPoints) o;
+
+            return points.equals(that.points);
+        }
+
+        @Override
+        public int hashCode() {
+            return points.hashCode();
         }
     }
 
