@@ -13,5 +13,6 @@
     <modules>
         <module>week2</module>
         <module>week3</module>
+        <module>week4</module>
     </modules>
 </project>
