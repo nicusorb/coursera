@@ -23,6 +23,7 @@ public class Solver {
 
     // is the initial board solvable?
     public boolean isSolvable() {
+        //TODO
         return true;
     }
 
@@ -64,12 +65,12 @@ public class Solver {
     private class MinBoardComparator implements Comparator<Board> {
         @Override
         public int compare(Board b1, Board b2) {
-            int b1Hamming = b1.hamming();
-            int b2Hamming = b2.hamming();
+            int b1Priority = b1.manhattan();
+            int b2Priority = b2.manhattan();
 
-            if (b1Hamming < b2Hamming)
+            if (b1Priority < b2Priority)
                 return -1;
-            else if (b1Hamming == b2Hamming)
+            else if (b1Priority == b2Priority)
                 return 0;
             return 1;
         }

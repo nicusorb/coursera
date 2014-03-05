@@ -18,7 +18,7 @@ public class Board {
     }
 
     private Board(Board b) {
-        this.previous = null;
+        this.previous = b;
         this.moves = b.moves + 1;
         this.blocks = new int[b.dimension()][b.dimension()];
 
@@ -49,12 +49,22 @@ public class Board {
     }
 
     // sum of Manhattan distances between blocks and goal
-//    public int manhattan() {
-//        //TODO
-//        int manhattan = 0;
-//
-//        return manhattan + moves;
-//    }
+    public int manhattan() {
+        int manhattan = 0;
+
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                if (blocks[i][j] == 0)
+                    continue;
+                int goalRow = (blocks[i][j] - 1) / dimension();
+                int goalColumn = (blocks[i][j] - 1) % dimension();
+
+                manhattan += Math.abs(goalRow - i) + Math.abs(goalColumn - j);
+            }
+        }
+
+        return manhattan + moves;
+    }
 
     // is this board the goal board?
     public boolean isGoal() {
