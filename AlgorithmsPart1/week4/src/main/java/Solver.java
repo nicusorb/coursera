@@ -3,14 +3,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Solver {
+    private boolean solvable = true;
     private List<Board> solution = new LinkedList<Board>();
+    private List<Board> solution2 = new LinkedList<Board>();
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
         MinPQ<Board> minPQ = new MinPQ<Board>(10, new MinBoardComparator());
+        MinPQ<Board> minPQ2 = new MinPQ<Board>(10, new MinBoardComparator());
 
         minPQ.insert(initial);
-        Board minBoard;
+        minPQ2.insert(initial.twin());
+
+        Board minBoard, minBoard2;
         do {
             minBoard = minPQ.delMin();
             solution.add(minBoard);
@@ -18,12 +23,25 @@ public class Solver {
                 if (!solution.contains(board))
                     minPQ.insert(board);
             }
-        } while (!minBoard.isGoal());
+
+            minBoard2 = minPQ2.delMin();
+            solution2.add(minBoard2);
+            for (Board board : minBoard2.neighbors()) {
+                if (!solution2.contains(board))
+                    minPQ2.insert(board);
+            }
+        } while (!minBoard.isGoal() && !minBoard2.isGoal());
+
+        solution2.clear();
+        if (minBoard2.isGoal()) {
+            solvable = false;
+            solution.clear();
+        }
     }
 
     // is the initial board solvable?
     public boolean isSolvable() {
-        return true;
+        return solvable;
     }
 
     // min number of moves to solve initial board; -1 if no solution

@@ -3,19 +3,17 @@ import java.util.List;
 import java.util.Random;
 
 public class Board {
-    private Board previous;
     private int[][] blocks;
     private int moves;
 
     // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)
     public Board(int[][] blocks) {
-        this.previous = null;
-        this.blocks = blocks;
+        this.blocks = new int[blocks.length][blocks.length];
+        System.arraycopy(blocks, 0, this.blocks, 0, blocks.length);
         this.moves = 0;
     }
 
     private Board(Board b) {
-        this.previous = b;
         this.moves = b.moves + 1;
         this.blocks = new int[b.dimension()][b.dimension()];
 
@@ -76,26 +74,26 @@ public class Board {
 
     // a board obtained by exchanging two adjacent blocks in the same row
     public Board twin() {
-        int column = new Random().nextInt(dimension());
-
         Board twinBoard = new Board(this);
-        int columnToExchange = -1;
-        if (column > 0) {
-            columnToExchange = column - 1;
-        } else if (column < dimension() - 1) {
-            columnToExchange = column + 1;
-        }
+        int row = -1, columnToExchange = -1, column = -1;
 
-        exchangeColumnsOnARandomRow(twinBoard, column, columnToExchange);
+        do {
+            row = new Random().nextInt(dimension());
+            column = new Random().nextInt(dimension());
 
-        return twinBoard;
-    }
+            if (column > 0) {
+                columnToExchange = column - 1;
+            } else if (column < dimension() - 1) {
+                columnToExchange = column + 1;
+            }
+        } while (twinBoard.blocks[row][columnToExchange] == 0 ||
+                twinBoard.blocks[row][column] == 0);
 
-    private void exchangeColumnsOnARandomRow(Board twinBoard, int column, int columnToExchange) {
-        int row = new Random().nextInt(dimension());
         int tmp = twinBoard.blocks[row][columnToExchange];
         twinBoard.blocks[row][columnToExchange] = twinBoard.blocks[row][column];
         twinBoard.blocks[row][column] = tmp;
+
+        return twinBoard;
     }
 
     // string representation of the board (in the output format specified below)
@@ -174,6 +172,10 @@ public class Board {
             return false;
 
         Board board = (Board) o;
+
+        if (this.dimension() != board.dimension())
+            return false;
+
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
                 if (blocks[i][j] != board.blocks[i][j])
