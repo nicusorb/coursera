@@ -23,7 +23,6 @@ public class Solver {
 
     // is the initial board solvable?
     public boolean isSolvable() {
-        //TODO
         return true;
     }
 

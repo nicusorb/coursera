@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Board {
     private Board previous;
@@ -11,7 +12,7 @@ public class Board {
         this(null, blocks, 0);
     }
 
-    public Board(Board previous, int[][] blocks, int moves) {
+    private Board(Board previous, int[][] blocks, int moves) {
         this.previous = previous;
         this.blocks = blocks;
         this.moves = moves;
@@ -77,7 +78,29 @@ public class Board {
         return true;
     }
 
-    //    public Board twin()                    // a board obtained by exchanging two adjacent blocks in the same row
+    // a board obtained by exchanging two adjacent blocks in the same row
+    public Board twin() {
+        int column = new Random().nextInt(dimension());
+
+        Board twinBoard = new Board(this);
+        int columnToExchange = -1;
+        if (column > 0) {
+            columnToExchange = column - 1;
+        } else if (column < dimension() - 1) {
+            columnToExchange = column + 1;
+        }
+
+        exchangeColumnsOnARandomRow(twinBoard, column, columnToExchange);
+
+        return twinBoard;
+    }
+
+    private void exchangeColumnsOnARandomRow(Board twinBoard, int column, int columnToExchange) {
+        int row = new Random().nextInt(dimension());
+        int tmp = twinBoard.blocks[row][columnToExchange];
+        twinBoard.blocks[row][columnToExchange] = twinBoard.blocks[row][column];
+        twinBoard.blocks[row][column] = tmp;
+    }
 
     // string representation of the board (in the output format specified below)
     public String toString() {
@@ -162,13 +185,6 @@ public class Board {
             }
         }
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = previous != null ? previous.hashCode() : 0;
-        result = 31 * result + moves;
-        return result;
     }
 
     private boolean isInRightPlace(int i, int j) {
