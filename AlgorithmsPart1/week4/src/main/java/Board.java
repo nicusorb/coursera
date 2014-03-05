@@ -9,7 +9,11 @@ public class Board {
     // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)
     public Board(int[][] blocks) {
         this.blocks = new int[blocks.length][blocks.length];
-        System.arraycopy(blocks, 0, this.blocks, 0, blocks.length);
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                this.blocks[i][j] = blocks[i][j];
+            }
+        }
         this.moves = 0;
     }
 
