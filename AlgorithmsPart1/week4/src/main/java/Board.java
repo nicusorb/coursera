@@ -72,7 +72,7 @@ public class Board {
     // string representation of the board (in the output format specified below)
     public String toString() {
         String out = "";
-        out += moves + "\n";
+        out += dimension() + "\n";
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
                 if (j < blocks[i].length - 1) {
@@ -89,7 +89,7 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        List<Board> neighbords = new LinkedList<Board>();
+        List<Board> neighbors = new LinkedList<Board>();
 
         int row = 0, column = 0;
         for (int i = 0; i < blocks.length; i++) {
@@ -104,26 +104,28 @@ public class Board {
             Board board = new Board(this);
             board.blocks[row][column] = board.blocks[row - 1][column];
             board.blocks[row - 1][column] = 0;
-            neighbords.add(board);
-        } else if (row < dimension() - 1) {
+            neighbors.add(board);
+        }
+        if (row < dimension() - 1) {
             Board board = new Board(this);
             board.blocks[row][column] = board.blocks[row + 1][column];
             board.blocks[row + 1][column] = 0;
-            neighbords.add(board);
+            neighbors.add(board);
         }
 
         if (column > 0) {
             Board board = new Board(this);
             board.blocks[row][column] = board.blocks[row][column - 1];
-            board.blocks[row - 1][column] = 0;
-            neighbords.add(board);
-        } else if (column < dimension() - 1) {
+            board.blocks[row][column - 1] = 0;
+            neighbors.add(board);
+        }
+        if (column < dimension() - 1) {
             Board board = new Board(this);
             board.blocks[row][column] = board.blocks[row][column + 1];
-            board.blocks[row + 1][column] = 0;
-            neighbords.add(board);
+            board.blocks[row][column + 1] = 0;
+            neighbors.add(board);
         }
-        return neighbords;
+        return neighbors;
     }
 
     private int findEmptyColumnLocation(int row) {
@@ -134,7 +136,30 @@ public class Board {
         }
         return -1;
     }
-//    public boolean equals(Object y)        // does this board equal y?
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Board board = (Board) o;
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                if (blocks[i][j] != board.blocks[i][j])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = previous != null ? previous.hashCode() : 0;
+        result = 31 * result + moves;
+        return result;
+    }
 
     private boolean isInRightPlace(int i, int j) {
         return blocks[i][j] == 0 || blocks[i][j] == (dimension() * i + j + 1);

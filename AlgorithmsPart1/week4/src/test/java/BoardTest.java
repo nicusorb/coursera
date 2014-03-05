@@ -33,6 +33,6 @@ public class BoardTest {
         int[][] blocks = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
         Board board = new Board(blocks);
 
-        assertThat(board.toString(), is("0\n1 2 3\n4 5 6\n7 8 0\n"));
+        assertThat(board.toString(), is("3\n1 2 3\n4 5 6\n7 8 0\n"));
     }
 }
