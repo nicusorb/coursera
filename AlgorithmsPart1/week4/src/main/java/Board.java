@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.List;
 
 public class Board {
     private Board previous;
@@ -13,6 +15,18 @@ public class Board {
         this.previous = previous;
         this.blocks = blocks;
         this.moves = moves;
+    }
+
+    private Board(Board b) {
+        this.previous = null;
+        this.moves = b.moves + 1;
+        this.blocks = new int[b.dimension()][b.dimension()];
+
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                this.blocks[i][j] = b.blocks[i][j];
+            }
+        }
     }
 
     // board dimension dimension
@@ -75,7 +89,50 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        return null;
+        List<Board> neighbords = new LinkedList<Board>();
+
+        int row = 0, column = 0;
+        for (int i = 0; i < blocks.length; i++) {
+            column = findEmptyColumnLocation(i);
+            if (column != -1) {
+                row = i;
+                break;
+            }
+        }
+
+        if (row > 0) {
+            Board board = new Board(this);
+            board.blocks[row][column] = board.blocks[row - 1][column];
+            board.blocks[row - 1][column] = 0;
+            neighbords.add(board);
+        } else if (row < dimension() - 1) {
+            Board board = new Board(this);
+            board.blocks[row][column] = board.blocks[row + 1][column];
+            board.blocks[row + 1][column] = 0;
+            neighbords.add(board);
+        }
+
+        if (column > 0) {
+            Board board = new Board(this);
+            board.blocks[row][column] = board.blocks[row][column - 1];
+            board.blocks[row - 1][column] = 0;
+            neighbords.add(board);
+        } else if (column < dimension() - 1) {
+            Board board = new Board(this);
+            board.blocks[row][column] = board.blocks[row][column + 1];
+            board.blocks[row + 1][column] = 0;
+            neighbords.add(board);
+        }
+        return neighbords;
+    }
+
+    private int findEmptyColumnLocation(int row) {
+        for (int j = 0; j < blocks[row].length; j++) {
+            if (blocks[row][j] == 0) {
+                return j;
+            }
+        }
+        return -1;
     }
 //    public boolean equals(Object y)        // does this board equal y?
 
