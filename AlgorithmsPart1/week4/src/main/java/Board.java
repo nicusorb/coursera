@@ -9,13 +9,9 @@ public class Board {
 
     // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)
     public Board(int[][] blocks) {
-        this(null, blocks, 0);
-    }
-
-    private Board(Board previous, int[][] blocks, int moves) {
-        this.previous = previous;
+        this.previous = null;
         this.blocks = blocks;
-        this.moves = moves;
+        this.moves = 0;
     }
 
     private Board(Board b) {
