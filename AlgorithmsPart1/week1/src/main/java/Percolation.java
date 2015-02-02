@@ -9,18 +9,22 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
         nbOfSites = N;
         weightedQuickUnionUF = new WeightedQuickUnionUF(nbOfSites * nbOfSites);
-        sitesStatus = new boolean[nbOfSites][nbOfSites];
-        for (int i = 0; i < nbOfSites; i++) {
-            for (int j = 0; j < nbOfSites; i++) {
-                sitesStatus[i][j] = false;
-            }
-        }
+        sitesStatus = new boolean[nbOfSites + 1][nbOfSites + 1];
     }
 
     // open site (row i, column j) if it is not open already
     public void open(int i, int j) {
-        weightedQuickUnionUF.union(i, j);
-        sitesStatus[i - 1][j - 1] = true;
+        if (!isOpen(i, j)) {
+            sitesStatus[i][j] = true;
+            if (i > 1 && isOpen(i - 1, j))
+                weightedQuickUnionUF.union(nbOfSites * (i - 2) + j - 1, nbOfSites * (i - 1) + j - 1);
+            if (i < nbOfSites && isOpen(i + 1, j))
+                weightedQuickUnionUF.union(nbOfSites * (i - 1) + j-1, nbOfSites * i + j-1);
+            if (j > 1 && isOpen(i, j - 1))
+                weightedQuickUnionUF.union(nbOfSites * (i - 1) + j-2, nbOfSites * (i - 1) + j - 1);
+            if (j < nbOfSites && isOpen(i, j + 1))
+                weightedQuickUnionUF.union(nbOfSites * (i - 1) + j-1, nbOfSites * (i - 1) + j);
+        }
     }
 
     // is site (row i, column j) open?
@@ -39,7 +43,8 @@ public class Percolation {
             if (isOpen(1, i)) {
                 for (int j = 1; j <= nbOfSites; j++) {
                     if (isOpen(nbOfSites, j)) {
-//                        if (weightedQuickUnionUF.connected())
+                        if (weightedQuickUnionUF.connected(i - 1, nbOfSites * (nbOfSites - 1) + j - 1))
+                            return true;
                     }
                 }
             }
@@ -48,7 +53,7 @@ public class Percolation {
     }
 
     private boolean siteStatus(int i, int j) {
-        return sitesStatus[i - 1][j - 1];
+        return sitesStatus[i][j];
     }
 
     // test client (optional)
