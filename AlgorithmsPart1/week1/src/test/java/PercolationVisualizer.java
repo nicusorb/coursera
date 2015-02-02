@@ -59,11 +59,13 @@ public class PercolationVisualizer {
     }
 
     public static void main(String[] args) {
+        Stopwatch stopwatch = new Stopwatch();
         In in = new In(args[0]);      // input file
         int N = in.readInt();         // N-by-N percolation system
 
         if (args.length > 1)
             DELAY = Integer.parseInt(args[1]);
+        System.out.println("DELAY: " + DELAY);
 
         // turn on animation mode
         StdDraw.show(0);
@@ -79,5 +81,6 @@ public class PercolationVisualizer {
             draw(perc, N);
             StdDraw.show(DELAY);
         }
+        System.out.println("Elapsed time: " + stopwatch.elapsedTime());
     }
 }
