@@ -4,7 +4,7 @@ public class PercolationTest {
 
     private Percolation sut;
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void throwExceptionIfNumberOfSitesIsNotPositive() throws Exception {
         Percolation sut = new Percolation(0);
     }
@@ -13,7 +13,7 @@ public class PercolationTest {
     public void openShouldTrowExceptionIfRowOutOfBoundaries() throws Exception {
         sut = new Percolation(4);
 
-        sut.open(5, 2);
+        sut.open(0, 2);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)

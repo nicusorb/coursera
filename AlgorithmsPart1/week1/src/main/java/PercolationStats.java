@@ -46,7 +46,7 @@ public class PercolationStats {
         while (!percolation.percolates()) {
             int site1 = generateRandomSite(N);
             int site2 = generateRandomSite(N);
-            if (percolation.isFull(site1, site2)) {
+            if (!percolation.isOpen(site1, site2)) {
                 percolation.open(site1, site2);
                 nbOfOpenedSites++;
             }

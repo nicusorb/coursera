@@ -7,7 +7,7 @@ public class Percolation {
     // create N-by-N grid, with all sites blocked
     public Percolation(int N) {
         if (N <= 0)
-            throw new IndexOutOfBoundsException();
+            throw new IllegalArgumentException();
         nbOfSites = N;
         weightedQuickUnionUF = new WeightedQuickUnionUF(nbOfSites * nbOfSites + 2);
         virtualTopSite = nbOfSites * nbOfSites;
@@ -17,6 +17,8 @@ public class Percolation {
 
     // open site (row i, column j) if it is not open already
     public void open(int i, int j) {
+        validateParameters(i, j);
+
         if (!isOpen(i, j)) {
             sitesStatus[i][j] = true;
             int currentSite = nbOfSites * (i - 1) + j - 1;
@@ -37,12 +39,15 @@ public class Percolation {
 
     // is site (row i, column j) open?
     public boolean isOpen(int i, int j) {
+        validateParameters(i, j);
         return sitesStatus[i][j];
     }
 
     // is site (row i, column j) full?
     public boolean isFull(int i, int j) {
-        return !isOpen(i, j);
+        validateParameters(i, j);
+        int currentSite = nbOfSites * (i - 1) + j - 1;
+        return weightedQuickUnionUF.connected(currentSite, virtualTopSite);
     }
 
     // does the system percolate?
@@ -52,5 +57,10 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
+    }
+
+    private void validateParameters(int i, int j) {
+        if (i < 1 || i > nbOfSites || j < 1 || j > nbOfSites)
+            throw new IndexOutOfBoundsException();
     }
 }
