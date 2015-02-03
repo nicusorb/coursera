@@ -26,7 +26,7 @@ public class Percolation {
             int currentSite = nbOfSites * (i - 1) + j - 1;
             if (i == 1) {
                 weightedQuickUnionUF.union(currentSite, virtualTopSite);
-                fullStatus[i][j] = true;
+                setFull(i, j);
             }
             if (i == nbOfSites)
                 weightedQuickUnionUF.union(currentSite, virtualBottomSite);
@@ -40,7 +40,7 @@ public class Percolation {
                 weightedQuickUnionUF.union(currentSite, nbOfSites * (i - 1) + j);
 
             if (hasFullNeighbors(i, j)) {
-                setNeighborsFull(i, j);
+                setFull(i, j);
             }
         }
     }
@@ -76,24 +76,16 @@ public class Percolation {
                 || (i > 1 && isFull(i - 1, j)) || (i < nbOfSites && isFull(i + 1, j));
     }
 
-    private void setNeighborsFull(int i, int j) {
+    private void setFull(int i, int j) {
         fullStatus[i][j] = true;
-        if (shouldSetFull(i, j - 1)) {
-            setNeighborsFull(i, j - 1);
-            fullStatus[i][j - 1] = true;
-        }
-        if (shouldSetFull(i, j + 1)) {
-            setNeighborsFull(i, j + 1);
-            fullStatus[i][j + 1] = true;
-        }
-        if (shouldSetFull(i - 1, j)) {
-            setNeighborsFull(i - 1, j);
-            fullStatus[i - 1][j] = true;
-        }
-        if (shouldSetFull(i + 1, j)) {
-            setNeighborsFull(i + 1, j);
-            fullStatus[i + 1][j] = true;
-        }
+        if (shouldSetFull(i, j - 1))
+            setFull(i, j - 1);
+        if (shouldSetFull(i, j + 1))
+            setFull(i, j + 1);
+        if (shouldSetFull(i - 1, j))
+            setFull(i - 1, j);
+        if (shouldSetFull(i + 1, j))
+            setFull(i + 1, j);
     }
 
     private boolean shouldSetFull(int i, int j) {
