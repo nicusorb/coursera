@@ -1,6 +1,7 @@
 public class Percolation {
     private int nbOfSites;
     private boolean[][] sitesStatus;
+    private boolean[][] fullStatus;
     private WeightedQuickUnionUF weightedQuickUnionUF;
     private int virtualTopSite, virtualBottomSite;
 
@@ -13,6 +14,7 @@ public class Percolation {
         virtualTopSite = nbOfSites * nbOfSites;
         virtualBottomSite = nbOfSites * nbOfSites + 1;
         sitesStatus = new boolean[nbOfSites + 1][nbOfSites + 1];
+        fullStatus = new boolean[nbOfSites + 1][nbOfSites + 1];
     }
 
     // open site (row i, column j) if it is not open already
@@ -22,8 +24,10 @@ public class Percolation {
         if (!isOpen(i, j)) {
             sitesStatus[i][j] = true;
             int currentSite = nbOfSites * (i - 1) + j - 1;
-            if (i == 1)
+            if (i == 1) {
                 weightedQuickUnionUF.union(currentSite, virtualTopSite);
+                fullStatus[i][j] = true;
+            }
             if (i == nbOfSites)
                 weightedQuickUnionUF.union(currentSite, virtualBottomSite);
             if (i > 1 && isOpen(i - 1, j))
@@ -34,6 +38,10 @@ public class Percolation {
                 weightedQuickUnionUF.union(currentSite, nbOfSites * (i - 1) + j - 2);
             if (j < nbOfSites && isOpen(i, j + 1))
                 weightedQuickUnionUF.union(currentSite, nbOfSites * (i - 1) + j);
+
+            if (hasFullNeighbors(i, j)) {
+                setNeighborsFull(i, j);
+            }
         }
     }
 
@@ -46,8 +54,7 @@ public class Percolation {
     // is site (row i, column j) full?
     public boolean isFull(int i, int j) {
         validateParameters(i, j);
-        int currentSite = nbOfSites * (i - 1) + j - 1;
-        return weightedQuickUnionUF.connected(currentSite, virtualTopSite);
+        return fullStatus[i][j];
     }
 
     // does the system percolate?
@@ -62,5 +69,34 @@ public class Percolation {
     private void validateParameters(int i, int j) {
         if (i < 1 || i > nbOfSites || j < 1 || j > nbOfSites)
             throw new IndexOutOfBoundsException();
+    }
+
+    private boolean hasFullNeighbors(int i, int j) {
+        return (j > 1 && isFull(i, j - 1)) || (j < nbOfSites && isFull(i, j + 1))
+                || (i > 1 && isFull(i - 1, j)) || (i < nbOfSites && isFull(i + 1, j));
+    }
+
+    private void setNeighborsFull(int i, int j) {
+        fullStatus[i][j] = true;
+        if (shouldSetFull(i, j - 1)) {
+            setNeighborsFull(i, j - 1);
+            fullStatus[i][j - 1] = true;
+        }
+        if (shouldSetFull(i, j + 1)) {
+            setNeighborsFull(i, j + 1);
+            fullStatus[i][j + 1] = true;
+        }
+        if (shouldSetFull(i - 1, j)) {
+            setNeighborsFull(i - 1, j);
+            fullStatus[i - 1][j] = true;
+        }
+        if (shouldSetFull(i + 1, j)) {
+            setNeighborsFull(i + 1, j);
+            fullStatus[i + 1][j] = true;
+        }
+    }
+
+    private boolean shouldSetFull(int i, int j) {
+        return i >= 1 && i <= nbOfSites && j >= 1 && j <= nbOfSites && isOpen(i, j) && !isFull(i, j);
     }
 }
