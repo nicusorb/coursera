@@ -37,21 +37,17 @@ public class Percolation {
 
     // is site (row i, column j) open?
     public boolean isOpen(int i, int j) {
-        return siteStatus(i, j);
+        return sitesStatus[i][j];
     }
 
     // is site (row i, column j) full?
     public boolean isFull(int i, int j) {
-        return siteStatus(i, j);
+        return !isOpen(i, j);
     }
 
     // does the system percolate?
     public boolean percolates() {
         return weightedQuickUnionUF.connected(virtualTopSite, virtualBottomSite);
-    }
-
-    private boolean siteStatus(int i, int j) {
-        return sitesStatus[i][j];
     }
 
     // test client (optional)
