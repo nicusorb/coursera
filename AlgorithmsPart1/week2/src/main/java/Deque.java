@@ -31,9 +31,9 @@ public class Deque<Item> implements Iterable<Item> {
     private int numberOfItems = 0;
 
     private class Node<T> {
-        T item;
-        Node next;
-        Node previous;
+        private T item;
+        private Node next;
+        private Node previous;
     }
 
     /**
@@ -80,6 +80,44 @@ public class Deque<Item> implements Iterable<Item> {
         numberOfItems++;
     }
 
+    /**
+     * delete and return the item at the front
+     */
+    public Item removeFirst() {
+        checkEmptyDeque();
+        Item item = firstItem.item;
+        firstItem = firstItem.next;
+        if (firstItem == null)
+            lastItem = null;
+        else
+            firstItem.previous = null;
+        numberOfItems--;
+        return item;
+    }
+
+    /**
+     * delete and return the item at the end
+     */
+    public Item removeLast() {
+        checkEmptyDeque();
+        Item item = lastItem.item;
+        lastItem = lastItem.previous;
+        if (lastItem == null)
+            firstItem = null;
+        else
+            lastItem.next = null;
+        numberOfItems--;
+        return item;
+    }
+
+    /**
+     * @return an iterator over items in order from front to end
+     */
+    @Override
+    public Iterator<Item> iterator() {
+        return new DequeIterator(firstItem);
+    }
+
     private void addItemToEmptyDeque(Item item) {
         firstItem = createItem(item);
         lastItem = firstItem;
@@ -112,47 +150,9 @@ public class Deque<Item> implements Iterable<Item> {
         return node;
     }
 
-    /**
-     * delete and return the item at the front
-     */
-    public Item removeFirst() {
-        checkEmptyDeque();
-        Item item = firstItem.item;
-        firstItem = firstItem.next;
-        if (firstItem == null)
-            lastItem = null;
-        else
-            firstItem.previous = null;
-        numberOfItems--;
-        return item;
-    }
-
-    /**
-     * delete and return the item at the end
-     */
-    public Item removeLast() {
-        checkEmptyDeque();
-        Item item = lastItem.item;
-        lastItem = lastItem.previous;
-        if (lastItem == null)
-            firstItem = null;
-        else
-            lastItem.next = null;
-        numberOfItems--;
-        return item;
-    }
-
     private void checkEmptyDeque() {
         if (firstItem == null)
             throw new NoSuchElementException();
-    }
-
-    /**
-     * @return an iterator over items in order from front to end
-     */
-    @Override
-    public Iterator<Item> iterator() {
-        return new DequeIterator(firstItem);
     }
 
     private class DequeIterator implements Iterator<Item> {

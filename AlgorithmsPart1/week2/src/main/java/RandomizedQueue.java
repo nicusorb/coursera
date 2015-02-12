@@ -49,13 +49,29 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         checkForEmptyQueue();
         int randomPos = generateARandomPositionInArray();
         Item item = items[randomPos];
-        shiftAllElementsOnePositionRightStartingFrom(randomPos);
+        items[randomPos] = items[pos - 1];
         clearLastItemFromArray();
         pos--;
 
         if (arrayIsAQuarterFull())
             resize(items.length / 2);
         return item;
+    }
+
+    /**
+     * @return (but do not delete) a random item
+     */
+    public Item sample() {
+        checkForEmptyQueue();
+        return items[generateARandomPositionInArray()];
+    }
+
+    /**
+     * @return an independent iterator over items in random order
+     */
+    @Override
+    public Iterator<Item> iterator() {
+        return new RandomizedQueueIterator();
     }
 
     private void validateItem(Item item) {
@@ -81,14 +97,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return pos > 0 && pos == items.length / 4;
     }
 
-    /**
-     * @return (but do not delete) a random item
-     */
-    public Item sample() {
-        checkForEmptyQueue();
-        return items[generateARandomPositionInArray()];
-    }
-
     private void checkForEmptyQueue() {
         if (pos == 0)
             throw new NoSuchElementException();
@@ -99,21 +107,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return r.nextInt(pos);
     }
 
-    private void shiftAllElementsOnePositionRightStartingFrom(int randomPos) {
-        for (int i = randomPos; i < pos - 1; i++)
-            items[i] = items[i + 1];
-    }
-
     private void clearLastItemFromArray() {
         items[pos - 1] = null;
-    }
-
-    /**
-     * @return an independent iterator over items in random order
-     */
-    @Override
-    public Iterator<Item> iterator() {
-        return new RandomizedQueueIterator();
     }
 
     private class RandomizedQueueIterator implements Iterator<Item> {
