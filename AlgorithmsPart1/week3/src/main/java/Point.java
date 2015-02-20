@@ -64,7 +64,7 @@ public class Point implements Comparable<Point> {
         if (difY == 0) {
             return +0;
         }
-        return difY / ((double)(that.x - this.x));
+        return difY / ((double) (that.x - this.x));
     }
 
     private boolean isVerticalPoint(Point that) {
