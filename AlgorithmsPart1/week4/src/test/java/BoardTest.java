@@ -50,6 +50,9 @@ public class BoardTest {
         Board board = new Board(blocks);
 
         Board twinBoard = board.twin();
+
+        assertThat(twinBoard.getBlock(1, 0), is(3));
+        assertThat(twinBoard.getBlock(1, 1), is(2));
     }
 
     @Test

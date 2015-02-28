@@ -28,7 +28,7 @@ public class Board {
         }
     }
 
-    // board dimension dimension
+    // board dimension
     public int dimension() {
         return blocks.length;
     }
@@ -87,7 +87,7 @@ public class Board {
 
             if (column > 0) {
                 columnToExchange = column - 1;
-            } else if (column < dimension() - 1) {
+            } else {
                 columnToExchange = column + 1;
             }
         } while (twinBoard.blocks[row][columnToExchange] == 0 ||
@@ -100,27 +100,9 @@ public class Board {
         return twinBoard;
     }
 
-    // string representation of the board (in the output format specified below)
-    public String toString() {
-        String out = "";
-        out += dimension() + "\n";
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[i].length; j++) {
-                if (j < blocks[i].length - 1) {
-                    out += blocks[i][j] + " ";
-                } else {
-                    out += blocks[i][j];
-                }
-            }
-            out += "\n";
-        }
-
-        return out;
-    }
-
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        List<Board> neighbors = new LinkedList<Board>();
+        List<Board> neighbors = new LinkedList<>();
 
         int row = 0, column = 0;
         for (int i = 0; i < blocks.length; i++) {
@@ -159,15 +141,6 @@ public class Board {
         return neighbors;
     }
 
-    private int findEmptyColumnLocation(int row) {
-        for (int j = 0; j < blocks[row].length; j++) {
-            if (blocks[row][j] == 0) {
-                return j;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -189,7 +162,38 @@ public class Board {
         return true;
     }
 
+    // string representation of the board (in the output format specified below)
+    public String toString() {
+        String out = "";
+        out += dimension() + "\n";
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                if (j < blocks[i].length - 1) {
+                    out += blocks[i][j] + " ";
+                } else {
+                    out += blocks[i][j];
+                }
+            }
+            out += "\n";
+        }
+
+        return out;
+    }
+
+    public int getBlock(int row, int column) {
+        return blocks[row][column];
+    }
+
     private boolean isInRightPlace(int i, int j) {
         return blocks[i][j] == 0 || blocks[i][j] == (dimension() * i + j + 1);
+    }
+
+    private int findEmptyColumnLocation(int row) {
+        for (int j = 0; j < blocks[row].length; j++) {
+            if (blocks[row][j] == 0) {
+                return j;
+            }
+        }
+        return -1;
     }
 }
