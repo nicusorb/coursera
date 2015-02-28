@@ -4,18 +4,18 @@ import java.util.List;
 
 public class Solver {
     private boolean solvable = true;
-    private List<Board> solution = new LinkedList<Board>();
-    private List<Board> solution2 = new LinkedList<Board>();
+    private List<Board> solution = new LinkedList<>();
+    private List<Board> solutionTwin = new LinkedList<>();
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        MinPQ<Board> minPQ = new MinPQ<Board>(10, new MinBoardComparator());
-        MinPQ<Board> minPQ2 = new MinPQ<Board>(10, new MinBoardComparator());
+        MinPQ<Board> minPQ = new MinPQ<>(10, new MinBoardComparator());
+        MinPQ<Board> minPQTwin = new MinPQ<>(10, new MinBoardComparator());
 
         minPQ.insert(initial);
-        minPQ2.insert(initial.twin());
+        minPQTwin.insert(initial.twin());
 
-        Board minBoard, minBoard2;
+        Board minBoard, minBoardTwin;
         do {
             minBoard = minPQ.delMin();
             solution.add(minBoard);
@@ -24,16 +24,16 @@ public class Solver {
                     minPQ.insert(board);
             }
 
-            minBoard2 = minPQ2.delMin();
-            solution2.add(minBoard2);
-            for (Board board : minBoard2.neighbors()) {
-                if (!solution2.contains(board))
-                    minPQ2.insert(board);
+            minBoardTwin = minPQTwin.delMin();
+            solutionTwin.add(minBoardTwin);
+            for (Board board : minBoardTwin.neighbors()) {
+                if (!solutionTwin.contains(board))
+                    minPQTwin.insert(board);
             }
-        } while (!minBoard.isGoal() && !minBoard2.isGoal());
+        } while (!minBoard.isGoal() && !minBoardTwin.isGoal());
 
-        solution2.clear();
-        if (minBoard2.isGoal()) {
+        solutionTwin.clear();
+        if (minBoardTwin.isGoal()) {
             solvable = false;
             solution.clear();
         }
