@@ -205,46 +205,6 @@ public class Board {
         return blocks[row][columnToExchange] == 0 || blocks[row][column] == 0;
     }
 
-    private List<Board> buildNeighbors() {
-        List<Board> neighbors = new LinkedList<>();
-
-        int row = 0, column = 0;
-        for (int i = 0; i < blocks.length; i++) {
-            column = findEmptyColumnLocation(i);
-            if (column != -1) {
-                row = i;
-                break;
-            }
-        }
-
-        if (row > 0) {
-            int[][] clonedBlocks = clone(blocks);
-            clonedBlocks[row][column] = clonedBlocks[row - 1][column];
-            clonedBlocks[row - 1][column] = 0;
-            neighbors.add(new Board(clonedBlocks, true));
-        }
-        if (row < dimension() - 1) {
-            int[][] clonedBlocks = clone(blocks);
-            clonedBlocks[row][column] = clonedBlocks[row + 1][column];
-            clonedBlocks[row + 1][column] = 0;
-            neighbors.add(new Board(clonedBlocks, true));
-        }
-
-        if (column > 0) {
-            int[][] clonedBlocks = clone(blocks);
-            clonedBlocks[row][column] = clonedBlocks[row][column - 1];
-            clonedBlocks[row][column - 1] = 0;
-            neighbors.add(new Board(clonedBlocks, true));
-        }
-        if (column < dimension() - 1) {
-            int[][] clonedBlocks = clone(blocks);
-            clonedBlocks[row][column] = clonedBlocks[row][column + 1];
-            clonedBlocks[row][column + 1] = 0;
-            neighbors.add(new Board(clonedBlocks, true));
-        }
-        return neighbors;
-    }
-
     private int findEmptyColumnLocation(int row) {
         for (int j = 0; j < blocks[row].length; j++) {
             if (blocks[row][j] == 0) {
