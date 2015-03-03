@@ -21,4 +21,7 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>8puzzle</finalName>
+    </build>
 </project>

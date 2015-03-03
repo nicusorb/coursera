@@ -3,29 +3,22 @@ import java.util.List;
 import java.util.Random;
 
 public class Board {
-    private int[][] blocks;
-    private int moves;
+    private final int[][] blocks;
+    private final int hammingDistance;
+    private final int manhattanDistance;
+    private Board twin;
 
     // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)
     public Board(int[][] blocks) {
-        this.blocks = new int[blocks.length][blocks.length];
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[i].length; j++) {
-                this.blocks[i][j] = blocks[i][j];
-            }
-        }
-        this.moves = 0;
+        this.blocks = clone(blocks);
+        this.hammingDistance = computeHammingDistance();
+        this.manhattanDistance = computeManhattanDistance();
     }
 
-    private Board(Board b) {
-        this.moves = b.moves + 1;
-        this.blocks = new int[b.dimension()][b.dimension()];
-
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[i].length; j++) {
-                this.blocks[i][j] = b.blocks[i][j];
-            }
-        }
+    private Board(int[][] blocks, boolean clone) {
+        this.blocks = blocks;
+        this.hammingDistance = computeHammingDistance();
+        this.manhattanDistance = computeManhattanDistance();
     }
 
     // board dimension
@@ -35,34 +28,12 @@ public class Board {
 
     // number of blocks out of place
     public int hamming() {
-        int hamming = 0;
-        for (int i = 0; i < dimension(); i++) {
-            for (int j = 0; j < dimension(); j++) {
-                if (!isInRightPlace(i, j)) {
-                    hamming += 1;
-                }
-            }
-        }
-
-        return hamming + moves;
+        return hammingDistance;
     }
 
     // sum of Manhattan distances between blocks and goal
     public int manhattan() {
-        int manhattan = 0;
-
-        for (int i = 0; i < dimension(); i++) {
-            for (int j = 0; j < dimension(); j++) {
-                if (blocks[i][j] == 0)
-                    continue;
-                int goalRow = (blocks[i][j] - 1) / dimension();
-                int goalColumn = (blocks[i][j] - 1) % dimension();
-
-                manhattan += Math.abs(goalRow - i) + Math.abs(goalColumn - j);
-            }
-        }
-
-        return manhattan + moves;
+        return manhattanDistance;
     }
 
     // is this board the goal board?
@@ -78,26 +49,9 @@ public class Board {
 
     // a board obtained by exchanging two adjacent blocks in the same row
     public Board twin() {
-        Board twinBoard = new Board(this);
-        int row = -1, columnToExchange = -1, column = -1;
-
-        do {
-            row = new Random().nextInt(dimension());
-            column = new Random().nextInt(dimension());
-
-            if (column > 0) {
-                columnToExchange = column - 1;
-            } else {
-                columnToExchange = column + 1;
-            }
-        } while (twinBoard.blocks[row][columnToExchange] == 0 ||
-                twinBoard.blocks[row][column] == 0);
-
-        int tmp = twinBoard.blocks[row][columnToExchange];
-        twinBoard.blocks[row][columnToExchange] = twinBoard.blocks[row][column];
-        twinBoard.blocks[row][column] = tmp;
-
-        return twinBoard;
+        if (twin == null)
+            twin = buildTwinBoard();
+        return twin;
     }
 
     // all neighboring boards
@@ -114,29 +68,29 @@ public class Board {
         }
 
         if (row > 0) {
-            Board board = new Board(this);
-            board.blocks[row][column] = board.blocks[row - 1][column];
-            board.blocks[row - 1][column] = 0;
-            neighbors.add(board);
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row - 1][column];
+            clonedBlocks[row - 1][column] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
         }
         if (row < dimension() - 1) {
-            Board board = new Board(this);
-            board.blocks[row][column] = board.blocks[row + 1][column];
-            board.blocks[row + 1][column] = 0;
-            neighbors.add(board);
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row + 1][column];
+            clonedBlocks[row + 1][column] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
         }
 
         if (column > 0) {
-            Board board = new Board(this);
-            board.blocks[row][column] = board.blocks[row][column - 1];
-            board.blocks[row][column - 1] = 0;
-            neighbors.add(board);
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row][column - 1];
+            clonedBlocks[row][column - 1] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
         }
         if (column < dimension() - 1) {
-            Board board = new Board(this);
-            board.blocks[row][column] = board.blocks[row][column + 1];
-            board.blocks[row][column + 1] = 0;
-            neighbors.add(board);
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row][column + 1];
+            clonedBlocks[row][column + 1] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
         }
         return neighbors;
     }
@@ -180,12 +134,115 @@ public class Board {
         return out;
     }
 
-    public int getBlock(int row, int column) {
-        return blocks[row][column];
+    private int[][] clone(int[][] blocksToClone) {
+        int[][] clonedBlocks = new int[blocksToClone.length][blocksToClone.length];
+        for (int i = 0; i < blocksToClone.length; i++) {
+            for (int j = 0; j < blocksToClone[i].length; j++) {
+                clonedBlocks[i][j] = blocksToClone[i][j];
+            }
+        }
+
+        return clonedBlocks;
+    }
+
+    private int computeHammingDistance() {
+        int hamming = 0;
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                if (!isInRightPlace(i, j)) {
+                    hamming += 1;
+                }
+            }
+        }
+
+        return hamming;
+    }
+
+    private int computeManhattanDistance() {
+        int manhattan = 0;
+
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                if (blocks[i][j] == 0)
+                    continue;
+                int goalRow = (blocks[i][j] - 1) / dimension();
+                int goalColumn = (blocks[i][j] - 1) % dimension();
+
+                manhattan += Math.abs(goalRow - i) + Math.abs(goalColumn - j);
+            }
+        }
+
+        return manhattan;
     }
 
     private boolean isInRightPlace(int i, int j) {
         return blocks[i][j] == 0 || blocks[i][j] == (dimension() * i + j + 1);
+    }
+
+    private Board buildTwinBoard() {
+        int[][] twinBoardBlocks = clone(blocks);
+        int row, columnToExchange, column;
+
+        do {
+            row = new Random().nextInt(dimension());
+            column = new Random().nextInt(dimension());
+
+            if (column > 0) {
+                columnToExchange = column - 1;
+            } else {
+                columnToExchange = column + 1;
+            }
+        } while (emptyBlockFound(twinBoardBlocks, row, columnToExchange, column));
+
+        int tmp = twinBoardBlocks[row][columnToExchange];
+        twinBoardBlocks[row][columnToExchange] = twinBoardBlocks[row][column];
+        twinBoardBlocks[row][column] = tmp;
+
+        return new Board(twinBoardBlocks, true);
+    }
+
+    private boolean emptyBlockFound(int[][] blocks, int row, int columnToExchange, int column) {
+        return blocks[row][columnToExchange] == 0 || blocks[row][column] == 0;
+    }
+
+    private List<Board> buildNeighbors() {
+        List<Board> neighbors = new LinkedList<>();
+
+        int row = 0, column = 0;
+        for (int i = 0; i < blocks.length; i++) {
+            column = findEmptyColumnLocation(i);
+            if (column != -1) {
+                row = i;
+                break;
+            }
+        }
+
+        if (row > 0) {
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row - 1][column];
+            clonedBlocks[row - 1][column] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
+        }
+        if (row < dimension() - 1) {
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row + 1][column];
+            clonedBlocks[row + 1][column] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
+        }
+
+        if (column > 0) {
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row][column - 1];
+            clonedBlocks[row][column - 1] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
+        }
+        if (column < dimension() - 1) {
+            int[][] clonedBlocks = clone(blocks);
+            clonedBlocks[row][column] = clonedBlocks[row][column + 1];
+            clonedBlocks[row][column + 1] = 0;
+            neighbors.add(new Board(clonedBlocks, true));
+        }
+        return neighbors;
     }
 
     private int findEmptyColumnLocation(int row) {

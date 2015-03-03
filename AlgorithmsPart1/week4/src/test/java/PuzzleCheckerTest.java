@@ -34,7 +34,6 @@ public class PuzzleCheckerTest {
     }
 
     public static void main(String[] args) {
-
         // for each command-line argument
         for (String filename : args) {
 
