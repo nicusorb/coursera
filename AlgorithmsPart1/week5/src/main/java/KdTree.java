@@ -1,41 +1,79 @@
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 public class KdTree {
-    private SET<Point2D> point2DSET;
+    private Node root;             // root of BST
 
-    // construct an empty set of points
-    public KdTree() {
-        point2DSET = new SET<>();
+    private class Node {
+        private Point2D key;           // sorted by key
+        private Node left, right;  // left and right subtrees
+        private int N;             // number of nodes in subtree
+
+        public Node(Point2D key, int N) {
+            this.key = key;
+            this.N = N;
+        }
     }
 
-    // is the set empty?
+    private class ColoredNode {
+        Node node;
+        boolean color;
+
+        public ColoredNode(Node node, boolean color) {
+            this.node = node;
+            this.color = color;
+        }
+    }
+
+    // is the symbol table empty?
     public boolean isEmpty() {
-        return point2DSET.isEmpty();
+        return size() == 0;
     }
 
-    // number of points in the set
+    // return number of key-value pairs in BST
     public int size() {
-        return point2DSET.size();
+        return size(root);
     }
 
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
-        point2DSET.add(p);
+        if (p == null)
+            throw new NullPointerException();
+        put(p);
     }
 
     // does the set contain point p?
     public boolean contains(Point2D p) {
-        return point2DSET.contains(p);
+        if (p == null)
+            throw new NullPointerException();
+
+        Boolean exists = contains(root, p, Point2D.X_ORDER);
+        return exists != null;
     }
 
     // draw all points to standard draw
     public void draw() {
-        for (Point2D point2D : point2DSET) {
-            StdDraw.point(point2D.x(), point2D.y());
+        Queue<ColoredNode> queue = new Queue<>();
+        queue.enqueue(new ColoredNode(root, true));
+
+        while (!queue.isEmpty()) {
+            ColoredNode coloredNode = queue.dequeue();
+            if (coloredNode.node == null)
+                continue;
+            drawNode(coloredNode);
+            queue.enqueue(new ColoredNode(coloredNode.node.left, !coloredNode.color));
+            queue.enqueue(new ColoredNode(coloredNode.node.right, !coloredNode.color));
         }
     }
 
     // all points that are inside the rectangle
     public Iterable<Point2D> range(RectHV rect) {
-        return null;
+        if (rect == null)
+            throw new NullPointerException();
+        List<Point2D> pointsInRectangle = new LinkedList<>();
+        range(root, rect, Point2D.X_ORDER, pointsInRectangle);
+        return pointsInRectangle;
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
@@ -49,5 +87,101 @@ public class KdTree {
         pointSET.insert(new Point2D(0.1, 0.1));
 
         pointSET.draw();
+    }
+
+    private Boolean contains(Node x, Point2D key, Comparator<Point2D> comparator) {
+        if (x == null)
+            return null;
+        Comparator<Point2D> newComparator = switchComparator(comparator);
+        int cmp = comparator.compare(key, x.key);
+        if (cmp < 0)
+            return contains(x.left, key, newComparator);
+        else if (cmp > 0)
+            return contains(x.right, key, newComparator);
+        else
+            return true;
+    }
+
+    private void put(Point2D key) {
+        root = put(root, key, Point2D.X_ORDER);
+    }
+
+    private Node put(Node x, Point2D key, Comparator<Point2D> comparator) {
+        if (x == null)
+            return new Node(key, 1);
+        Comparator<Point2D> newComparator = switchComparator(comparator);
+        int cmp = comparator.compare(key, x.key);
+        if (cmp < 0)
+            x.left = put(x.left, key, newComparator);
+        else if (cmp > 0)
+            x.right = put(x.right, key, newComparator);
+        x.N = 1 + size(x.left) + size(x.right);
+        return x;
+    }
+
+    private int size(Node x) {
+        if (x == null)
+            return 0;
+        else
+            return x.N;
+    }
+
+    private void drawNode(ColoredNode coloredNode) {
+        StdDraw.setPenRadius(0.03);
+        if (shouldBeRed(coloredNode.color))
+            setPenRed();
+        else
+            setPenBlue();
+        StdDraw.point(coloredNode.node.key.x(), coloredNode.node.key.y());
+    }
+
+    private boolean shouldBeRed(boolean color) {
+        return color == true;
+    }
+
+    private void setPenRed() {
+        StdDraw.setPenColor(255, 0, 0);
+    }
+
+    private void setPenBlue() {
+        StdDraw.setPenColor(0, 0, 255);
+    }
+
+    private void range(Node node, RectHV rect, Comparator<Point2D> comparator, List<Point2D> points) {
+        Comparator<Point2D> newComparator = switchComparator(comparator);
+        if (node == null)
+            return;
+        if (rect.contains(node.key)) {
+            points.add(node.key);
+            range(node.left, rect, newComparator, points);
+            range(node.right, rect, newComparator, points);
+        } else if (comparator.equals(Point2D.X_ORDER)) {
+            if (rect.xmin() < node.key.x() && node.key.x() < rect.xmax()) {
+                range(node.left, rect, newComparator, points);
+                range(node.right, rect, newComparator, points);
+            } else if (rect.xmax() < node.key.x()) {
+                range(node.left, rect, newComparator, points);
+            } else if (rect.xmin() > node.key.x()) {
+                range(node.right, rect, newComparator, points);
+            }
+        } else if (comparator.equals(Point2D.Y_ORDER)) {
+            if (rect.ymin() < node.key.y() && node.key.y() < rect.ymax()) {
+                range(node.left, rect, newComparator, points);
+                range(node.right, rect, newComparator, points);
+            } else if (rect.ymax() < node.key.y()) {
+                range(node.left, rect, newComparator, points);
+            } else if (rect.ymin() > node.key.y()) {
+                range(node.right, rect, newComparator, points);
+            }
+        }
+    }
+
+    private Comparator<Point2D> switchComparator(Comparator<Point2D> comparator) {
+        Comparator<Point2D> newComparator;
+        if (comparator == Point2D.X_ORDER)
+            newComparator = Point2D.Y_ORDER;
+        else
+            newComparator = Point2D.X_ORDER;
+        return newComparator;
     }
 }
