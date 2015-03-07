@@ -89,15 +89,15 @@ public class KdTree {
         pointSET.draw();
     }
 
-    private Boolean contains(Node x, Point2D key, Comparator<Point2D> comparator) {
-        if (x == null)
+    private Boolean contains(Node node, Point2D key, Comparator<Point2D> comparator) {
+        if (node == null)
             return null;
         Comparator<Point2D> newComparator = switchComparator(comparator);
-        int cmp = comparator.compare(key, x.key);
+        int cmp = comparator.compare(key, node.key);
         if (cmp < 0)
-            return contains(x.left, key, newComparator);
+            return contains(node.left, key, newComparator);
         else if (cmp > 0)
-            return contains(x.right, key, newComparator);
+            return contains(node.right, key, newComparator);
         else
             return true;
     }
@@ -106,24 +106,24 @@ public class KdTree {
         root = put(root, key, Point2D.X_ORDER);
     }
 
-    private Node put(Node x, Point2D key, Comparator<Point2D> comparator) {
-        if (x == null)
+    private Node put(Node node, Point2D key, Comparator<Point2D> comparator) {
+        if (node == null)
             return new Node(key, 1);
         Comparator<Point2D> newComparator = switchComparator(comparator);
-        int cmp = comparator.compare(key, x.key);
+        int cmp = comparator.compare(key, node.key);
         if (cmp < 0)
-            x.left = put(x.left, key, newComparator);
+            node.left = put(node.left, key, newComparator);
         else if (cmp > 0)
-            x.right = put(x.right, key, newComparator);
-        x.N = 1 + size(x.left) + size(x.right);
-        return x;
+            node.right = put(node.right, key, newComparator);
+        node.N = 1 + size(node.left) + size(node.right);
+        return node;
     }
 
-    private int size(Node x) {
-        if (x == null)
+    private int size(Node node) {
+        if (node == null)
             return 0;
         else
-            return x.N;
+            return node.N;
     }
 
     private void drawNode(ColoredNode coloredNode) {
