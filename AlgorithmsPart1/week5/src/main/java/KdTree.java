@@ -153,12 +153,10 @@ public class KdTree {
             return;
         if (rect.contains(node.key)) {
             points.add(node.key);
-            range(node.left, rect, newComparator, points);
-            range(node.right, rect, newComparator, points);
+            searchBothChildren(node, rect, points, newComparator);
         } else if (comparator.equals(Point2D.X_ORDER)) {
             if (rect.xmin() < node.key.x() && node.key.x() < rect.xmax()) {
-                range(node.left, rect, newComparator, points);
-                range(node.right, rect, newComparator, points);
+                searchBothChildren(node, rect, points, newComparator);
             } else if (rect.xmax() < node.key.x()) {
                 range(node.left, rect, newComparator, points);
             } else if (rect.xmin() > node.key.x()) {
@@ -166,8 +164,7 @@ public class KdTree {
             }
         } else if (comparator.equals(Point2D.Y_ORDER)) {
             if (rect.ymin() < node.key.y() && node.key.y() < rect.ymax()) {
-                range(node.left, rect, newComparator, points);
-                range(node.right, rect, newComparator, points);
+                searchBothChildren(node, rect, points, newComparator);
             } else if (rect.ymax() < node.key.y()) {
                 range(node.left, rect, newComparator, points);
             } else if (rect.ymin() > node.key.y()) {
@@ -183,5 +180,10 @@ public class KdTree {
         else
             newComparator = Point2D.X_ORDER;
         return newComparator;
+    }
+
+    private void searchBothChildren(Node node, RectHV rect, List<Point2D> points, Comparator<Point2D> newComparator) {
+        range(node.left, rect, newComparator, points);
+        range(node.right, rect, newComparator, points);
     }
 }
