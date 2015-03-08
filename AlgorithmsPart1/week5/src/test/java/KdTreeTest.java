@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class KdTreeTest {
@@ -39,6 +41,44 @@ public class KdTreeTest {
     @Test(expected = NullPointerException.class)
     public void rangeThrowsExceptionIfArgumentIsNull() throws Exception {
         sut.range(null);
+    }
+
+    @Test
+    public void rangeForHorizontalPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 0);
+        Point2D p2 = new Point2D(2, 0);
+        Point2D p3 = new Point2D(5, 5);
+
+        sut.insert(p1);
+        sut.insert(p2);
+        sut.insert(p3);
+
+        Iterable<Point2D> pointsInRange = sut.range(new RectHV(0, 0, 3, 1));
+
+        assertThat(pointsInRange, hasItems(p1, p2));
+        assertThat(pointsInRange, not(hasItem(p3)));
+    }
+
+    @Test
+    public void rangeForVerticalPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 0);
+        Point2D p2 = new Point2D(1, 1);
+        Point2D p3 = new Point2D(5, 5);
+
+        sut.insert(p1);
+        sut.insert(p2);
+        sut.insert(p3);
+
+        Iterable<Point2D> pointsInRange = sut.range(new RectHV(0, 0, 1, 1));
+
+        assertThat(pointsInRange, hasItems(p1, p2));
+        assertThat(pointsInRange, not(hasItem(p3)));
+    }
+
+    @Test
+    public void rangeForCustomPoints() throws Exception {
+
+
     }
 
     @Test(expected = NullPointerException.class)
