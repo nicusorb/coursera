@@ -40,4 +40,9 @@ public class KdTreeTest {
     public void rangeThrowsExceptionIfArgumentIsNull() throws Exception {
         sut.range(null);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void nearestThrowsExceptionIfArgumentIsNull() throws Exception {
+        sut.nearest(null);
+    }
 }
