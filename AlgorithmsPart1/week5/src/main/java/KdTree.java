@@ -99,6 +99,10 @@ public class KdTree {
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
+        if (p == null)
+            throw new NullPointerException();
+        if (isEmpty())
+            return null;
         RectHV rectHV = new RectHV(0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
         return nearest(root, p, root.key, rectHV, X_ORDER);
     }

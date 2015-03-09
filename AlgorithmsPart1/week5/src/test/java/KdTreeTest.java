@@ -1,9 +1,7 @@
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class KdTreeTest {
     private KdTree sut = new KdTree();
@@ -115,6 +113,11 @@ public class KdTreeTest {
     @Test(expected = NullPointerException.class)
     public void nearestThrowsExceptionIfArgumentIsNull() throws Exception {
         sut.nearest(null);
+    }
+
+    @Test
+    public void nearestReturnNullIfTreeIsEmpty() throws Exception {
+        sut.nearest(new Point2D(1, 1));
     }
 
     @Test
