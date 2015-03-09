@@ -212,7 +212,7 @@ public class KdTree {
             searchBothChildren(node, rect, points, newComparator);
         } else if (leftBoundary < value) {
             range(node.left, rect, newComparator, points);
-        } else if (leftBoundary > value) {
+        } else if (leftBoundary >= value) {
             range(node.right, rect, newComparator, points);
         }
     }
