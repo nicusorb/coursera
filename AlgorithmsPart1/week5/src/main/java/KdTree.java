@@ -156,21 +156,9 @@ public class KdTree {
             points.add(node.key);
             searchBothChildren(node, rect, points, newComparator);
         } else if (comparator.equals(Point2D.X_ORDER)) {
-            if (rect.xmin() < node.key.x() && node.key.x() < rect.xmax()) {
-                searchBothChildren(node, rect, points, newComparator);
-            } else if (rect.xmax() < node.key.x()) {
-                range(node.left, rect, newComparator, points);
-            } else if (rect.xmin() > node.key.x()) {
-                range(node.right, rect, newComparator, points);
-            }
+            searchPointsInRange(node, rect, points, newComparator, rect.xmin(), rect.xmax(), node.key.x());
         } else if (comparator.equals(Point2D.Y_ORDER)) {
-            if (rect.ymin() < node.key.y() && node.key.y() < rect.ymax()) {
-                searchBothChildren(node, rect, points, newComparator);
-            } else if (rect.ymax() < node.key.y()) {
-                range(node.left, rect, newComparator, points);
-            } else if (rect.ymin() > node.key.y()) {
-                range(node.right, rect, newComparator, points);
-            }
+            searchPointsInRange(node, rect, points, newComparator, rect.ymin(), rect.ymax(), node.key.y());
         }
     }
 
@@ -186,6 +174,21 @@ public class KdTree {
     private void searchBothChildren(Node node, RectHV rect, List<Point2D> points, Comparator<Point2D> newComparator) {
         range(node.left, rect, newComparator, points);
         range(node.right, rect, newComparator, points);
+    }
+
+    private void searchPointsInRange(Node node, RectHV rect, List<Point2D> points, Comparator<Point2D> newComparator,
+                                     double leftBoundary, double rightBoundary, double value) {
+        if (valueBetween(value, leftBoundary, rightBoundary)) {
+            searchBothChildren(node, rect, points, newComparator);
+        } else if (leftBoundary < value) {
+            range(node.left, rect, newComparator, points);
+        } else if (leftBoundary > value) {
+            range(node.right, rect, newComparator, points);
+        }
+    }
+
+    private boolean valueBetween(double value, double leftBoundary, double rightBoundary) {
+        return leftBoundary < value && value < rightBoundary;
     }
 
     private Point2D nearest(Node node, Point2D p, Point2D currentNearest, RectHV rectHV, Comparator<Point2D> comparator) {

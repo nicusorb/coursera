@@ -77,8 +77,15 @@ public class KdTreeTest {
 
     @Test
     public void rangeForCustomPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 1);
+        Point2D p2 = new Point2D(2, 3);
 
+        sut.insert(p1);
+        sut.insert(p2);
 
+        Iterable<Point2D> pointsInRange = sut.range(new RectHV(0, 0, 2, 3));
+
+        assertThat(pointsInRange, hasItems(p1, p2));
     }
 
     @Test(expected = NullPointerException.class)
