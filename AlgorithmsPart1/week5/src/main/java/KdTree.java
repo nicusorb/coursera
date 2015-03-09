@@ -200,51 +200,49 @@ public class KdTree {
         if (comparator.equals(Point2D.X_ORDER)) {
             if (node.key.x() > p.x()) {
                 RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), node.key.x(), rectHV.ymax());
-                Point2D nearestLeft = nearest(node.left, p, currentNearest, leftRect, switchComparator(comparator));
-
                 RectHV rightSubtreeRect = new RectHV(node.key.x(), rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
-                if (p.distanceTo(nearestLeft) <= rightSubtreeRect.distanceTo(p))
-                    return nearestLeft;
-                else {
-                    //search right subtree
-                    return nearest(node.right, p, nearestLeft, rightSubtreeRect, switchComparator(comparator));
-                }
+
+                return nearestLeft(node, p, currentNearest, comparator, leftRect, rightSubtreeRect);
             } else {
                 RectHV rightRect = new RectHV(node.key.x(), rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
-                Point2D nearestRight = nearest(node.right, p, currentNearest, rightRect, switchComparator(comparator));
-
                 RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), node.key.x(), rectHV.ymax());
-                if (p.distanceTo(nearestRight) <= leftSubtreeRect.distanceTo(p))
-                    return nearestRight;
-                else {
-                    //search left subtree
-                    return nearest(node.left, p, nearestRight, leftSubtreeRect, switchComparator(comparator));
-                }
+
+                return nearestRight(node, p, currentNearest, comparator, rightRect, leftSubtreeRect);
             }
         } else { //Y_ORDER
             if (node.key.y() < p.y()) {
                 RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), node.key.y());
-                Point2D nearestLeft = nearest(node.left, p, currentNearest, leftRect, switchComparator(comparator));
-
                 RectHV rightSubtreeRect = new RectHV(rectHV.xmin(), node.key.y(), rectHV.xmax(), rectHV.ymax());
-                if (p.distanceTo(nearestLeft) <= rightSubtreeRect.distanceTo(p))
-                    return nearestLeft;
-                else {
-                    //search right subtree
-                    return nearest(node.right, p, nearestLeft, rightSubtreeRect, switchComparator(comparator));
-                }
+
+                return nearestLeft(node, p, currentNearest, comparator, leftRect, rightSubtreeRect);
             } else {
                 RectHV rightRect = new RectHV(rectHV.xmin(), node.key.y(), rectHV.xmax(), rectHV.ymax());
-                Point2D nearestRight = nearest(node.right, p, currentNearest, rightRect, switchComparator(comparator));
-
                 RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), node.key.y());
-                if (p.distanceTo(nearestRight) <= leftSubtreeRect.distanceTo(p))
-                    return nearestRight;
-                else {
-                    //search left subtree
-                    return nearest(node.left, p, nearestRight, leftSubtreeRect, switchComparator(comparator));
-                }
+
+                return nearestRight(node, p, currentNearest, comparator, rightRect, leftSubtreeRect);
             }
+        }
+    }
+
+    private Point2D nearestLeft(Node node, Point2D p, Point2D currentNearest, Comparator<Point2D> comparator, RectHV leftRect, RectHV rightSubtreeRect) {
+        Point2D nearestLeft = nearest(node.left, p, currentNearest, leftRect, switchComparator(comparator));
+
+        if (p.distanceTo(nearestLeft) <= rightSubtreeRect.distanceTo(p))
+            return nearestLeft;
+        else {
+            //search right subtree
+            return nearest(node.right, p, nearestLeft, rightSubtreeRect, switchComparator(comparator));
+        }
+    }
+
+    private Point2D nearestRight(Node node, Point2D p, Point2D currentNearest, Comparator<Point2D> comparator, RectHV rightRect, RectHV leftSubtreeRect) {
+        Point2D nearestRight = nearest(node.right, p, currentNearest, rightRect, switchComparator(comparator));
+
+        if (p.distanceTo(nearestRight) <= leftSubtreeRect.distanceTo(p))
+            return nearestRight;
+        else {
+            //search left subtree
+            return nearest(node.left, p, nearestRight, leftSubtreeRect, switchComparator(comparator));
         }
     }
 }

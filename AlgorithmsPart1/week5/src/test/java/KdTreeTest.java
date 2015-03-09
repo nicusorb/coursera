@@ -92,4 +92,38 @@ public class KdTreeTest {
     public void nearestThrowsExceptionIfArgumentIsNull() throws Exception {
         sut.nearest(null);
     }
+
+    @Test
+    public void nearestForHorizontalPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 0);
+        Point2D p2 = new Point2D(2, 0);
+
+        sut.insert(p1);
+        sut.insert(p2);
+
+        assertThat(sut.nearest(p2), is(p2));
+    }
+
+    @Test
+    public void nearestForVerticalPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 0);
+        Point2D p2 = new Point2D(1, 1);
+
+        sut.insert(p1);
+        sut.insert(p2);
+
+        assertThat(sut.nearest(p2), is(p2));
+    }
+
+    @Test
+    public void nearestForCustomPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 1);
+        Point2D p2 = new Point2D(2, 2);
+        Point2D p3 = new Point2D(3, 5);
+
+        sut.insert(p1);
+        sut.insert(p2);
+
+        assertThat(sut.nearest(p3), is(p2));
+    }
 }
