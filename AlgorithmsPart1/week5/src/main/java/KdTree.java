@@ -228,26 +228,28 @@ public class KdTree {
             currentNearest = node.key;
 
         if (comparator.equals(X_ORDER)) {
-            if (node.key.x() > p.x()) {
-                RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), node.key.x(), rectHV.ymax());
-                RectHV rightSubtreeRect = new RectHV(node.key.x(), rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
+            double pointX = node.key.x();
+            if (pointX > p.x()) {
+                RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), pointX, rectHV.ymax());
+                RectHV rightSubtreeRect = new RectHV(pointX, rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
 
                 return nearestLeft(node, p, currentNearest, comparator, leftRect, rightSubtreeRect);
             } else {
-                RectHV rightRect = new RectHV(node.key.x(), rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
-                RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), node.key.x(), rectHV.ymax());
+                RectHV rightRect = new RectHV(pointX, rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
+                RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), pointX, rectHV.ymax());
 
                 return nearestRight(node, p, currentNearest, comparator, rightRect, leftSubtreeRect);
             }
         } else { //Y_ORDER
-            if (node.key.y() < p.y()) {
-                RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), node.key.y());
-                RectHV rightSubtreeRect = new RectHV(rectHV.xmin(), node.key.y(), rectHV.xmax(), rectHV.ymax());
+            double pointY = node.key.y();
+            if (pointY < p.y()) {
+                RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), pointY);
+                RectHV rightSubtreeRect = new RectHV(rectHV.xmin(), pointY, rectHV.xmax(), rectHV.ymax());
 
                 return nearestLeft(node, p, currentNearest, comparator, leftRect, rightSubtreeRect);
             } else {
-                RectHV rightRect = new RectHV(rectHV.xmin(), node.key.y(), rectHV.xmax(), rectHV.ymax());
-                RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), node.key.y());
+                RectHV rightRect = new RectHV(rectHV.xmin(), pointY, rectHV.xmax(), rectHV.ymax());
+                RectHV leftSubtreeRect = new RectHV(rectHV.xmin(), rectHV.ymin(), rectHV.xmax(), pointY);
 
                 return nearestRight(node, p, currentNearest, comparator, rightRect, leftSubtreeRect);
             }
