@@ -124,7 +124,7 @@ public class KdTree {
         int cmp = comparator.compare(key, node.key);
         if (cmp < 0)
             return contains(node.left, key, newComparator);
-        else if (cmp > 0)
+        else if (cmp >= 0)
             return contains(node.right, key, newComparator);
         else
             return false;
