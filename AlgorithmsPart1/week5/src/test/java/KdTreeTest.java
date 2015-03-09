@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -12,9 +13,33 @@ public class KdTreeTest {
         sut.insert(null);
     }
 
+    @Test
+    public void sizeOfEmptyTreeIsZero() throws Exception {
+        assertThat(sut.size(), is(0));
+    }
+
+    @Test
+    public void sizeOfATreeWithTwoItemsIsTwo() throws Exception {
+        sut.insert(new Point2D(1, 1));
+        sut.insert(new Point2D(1, 2));
+
+        assertThat(sut.size(), is(2));
+    }
+
     @Test(expected = NullPointerException.class)
     public void containsThrowsExceptionIfArgumentIsNull() throws Exception {
         sut.contains(null);
+    }
+
+    @Test
+    public void containsForHorizontalPoints() throws Exception {
+        Point2D p1 = new Point2D(1, 0);
+        Point2D p2 = new Point2D(2, 0);
+
+        sut.insert(p1);
+        sut.insert(p2);
+
+        assertThat(sut.contains(new Point2D(3, 0)), is(false));
     }
 
     @Test
@@ -29,13 +54,12 @@ public class KdTreeTest {
         sut.insert(p2);
         sut.insert(p3);
         sut.insert(p4);
-        sut.insert(p5);
 
         assertTrue(sut.contains(p1));
         assertTrue(sut.contains(p2));
         assertTrue(sut.contains(p3));
         assertTrue(sut.contains(p4));
-        assertTrue(sut.contains(p5));
+        assertFalse(sut.contains(p5));
     }
 
     @Test(expected = NullPointerException.class)

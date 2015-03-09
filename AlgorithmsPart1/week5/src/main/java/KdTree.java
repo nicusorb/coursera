@@ -5,6 +5,28 @@ import java.util.List;
 public class KdTree {
     private Node root;             // root of BST
 
+    /**
+     * Compares two points by x-coordinate.
+     */
+    private static final Comparator<Point2D> X_ORDER = new Comparator<Point2D>() {
+        public int compare(Point2D p, Point2D q) {
+            if (p.x() < q.x()) return -1;
+            if (p.x() > q.x()) return +1;
+            return 0;
+        }
+    };
+
+    /**
+     * Compares two points by y-coordinate.
+     */
+    private static final Comparator<Point2D> Y_ORDER = new Comparator<Point2D>() {
+        public int compare(Point2D p, Point2D q) {
+            if (p.y() < q.y()) return -1;
+            if (p.y() > q.y()) return +1;
+            return 0;
+        }
+    };
+
     private class Node {
         private Point2D key;           // sorted by key
         private Node left, right;  // left and right subtrees
@@ -17,8 +39,8 @@ public class KdTree {
     }
 
     private class ColoredNode {
-        Node node;
-        boolean color;
+        private Node node;
+        private boolean color;
 
         public ColoredNode(Node node, boolean color) {
             this.node = node;
@@ -48,8 +70,7 @@ public class KdTree {
         if (p == null)
             throw new NullPointerException();
 
-        Boolean exists = contains(root, p, Point2D.X_ORDER);
-        return exists != null;
+        return contains(root, p, X_ORDER);
     }
 
     // draw all points to standard draw
@@ -72,14 +93,14 @@ public class KdTree {
         if (rect == null)
             throw new NullPointerException();
         List<Point2D> pointsInRectangle = new LinkedList<>();
-        range(root, rect, Point2D.X_ORDER, pointsInRectangle);
+        range(root, rect, X_ORDER, pointsInRectangle);
         return pointsInRectangle;
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
         RectHV rectHV = new RectHV(0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
-        return nearest(root, p, root.key, rectHV, Point2D.X_ORDER);
+        return nearest(root, p, root.key, rectHV, X_ORDER);
     }
 
     // unit testing of the methods (optional)
@@ -90,9 +111,11 @@ public class KdTree {
         pointSET.draw();
     }
 
-    private Boolean contains(Node node, Point2D key, Comparator<Point2D> comparator) {
+    private boolean contains(Node node, Point2D key, Comparator<Point2D> comparator) {
         if (node == null)
-            return null;
+            return false;
+        if (node.key.compareTo(key) == 0)
+            return true;
         Comparator<Point2D> newComparator = switchComparator(comparator);
         int cmp = comparator.compare(key, node.key);
         if (cmp < 0)
@@ -100,16 +123,19 @@ public class KdTree {
         else if (cmp > 0)
             return contains(node.right, key, newComparator);
         else
-            return true;
+            return false;
     }
 
     private void put(Point2D key) {
-        root = put(root, key, Point2D.X_ORDER);
+        root = put(root, key, X_ORDER);
     }
 
     private Node put(Node node, Point2D key, Comparator<Point2D> comparator) {
         if (node == null)
             return new Node(key, 1);
+        if (node.key.compareTo(key) == 0)
+            return node;
+
         Comparator<Point2D> newComparator = switchComparator(comparator);
         int cmp = comparator.compare(key, node.key);
         if (cmp < 0)
@@ -155,19 +181,19 @@ public class KdTree {
         if (rect.contains(node.key)) {
             points.add(node.key);
             searchBothChildren(node, rect, points, newComparator);
-        } else if (comparator.equals(Point2D.X_ORDER)) {
+        } else if (comparator.equals(X_ORDER)) {
             searchPointsInRange(node, rect, points, newComparator, rect.xmin(), rect.xmax(), node.key.x());
-        } else if (comparator.equals(Point2D.Y_ORDER)) {
+        } else if (comparator.equals(Y_ORDER)) {
             searchPointsInRange(node, rect, points, newComparator, rect.ymin(), rect.ymax(), node.key.y());
         }
     }
 
     private Comparator<Point2D> switchComparator(Comparator<Point2D> comparator) {
         Comparator<Point2D> newComparator;
-        if (comparator == Point2D.X_ORDER)
-            newComparator = Point2D.Y_ORDER;
+        if (comparator == X_ORDER)
+            newComparator = Y_ORDER;
         else
-            newComparator = Point2D.X_ORDER;
+            newComparator = X_ORDER;
         return newComparator;
     }
 
@@ -194,10 +220,10 @@ public class KdTree {
     private Point2D nearest(Node node, Point2D p, Point2D currentNearest, RectHV rectHV, Comparator<Point2D> comparator) {
         if (node == null)
             return currentNearest;
-        if (node.key.distanceTo(p) < currentNearest.distanceTo(p))
+        if (node.key.distanceSquaredTo(p) < currentNearest.distanceSquaredTo(p))
             currentNearest = node.key;
 
-        if (comparator.equals(Point2D.X_ORDER)) {
+        if (comparator.equals(X_ORDER)) {
             if (node.key.x() > p.x()) {
                 RectHV leftRect = new RectHV(rectHV.xmin(), rectHV.ymin(), node.key.x(), rectHV.ymax());
                 RectHV rightSubtreeRect = new RectHV(node.key.x(), rectHV.ymin(), rectHV.xmax(), rectHV.ymax());
@@ -227,7 +253,7 @@ public class KdTree {
     private Point2D nearestLeft(Node node, Point2D p, Point2D currentNearest, Comparator<Point2D> comparator, RectHV leftRect, RectHV rightSubtreeRect) {
         Point2D nearestLeft = nearest(node.left, p, currentNearest, leftRect, switchComparator(comparator));
 
-        if (p.distanceTo(nearestLeft) <= rightSubtreeRect.distanceTo(p))
+        if (p.distanceSquaredTo(nearestLeft) <= rightSubtreeRect.distanceSquaredTo(p))
             return nearestLeft;
         else {
             //search right subtree
@@ -238,7 +264,7 @@ public class KdTree {
     private Point2D nearestRight(Node node, Point2D p, Point2D currentNearest, Comparator<Point2D> comparator, RectHV rightRect, RectHV leftSubtreeRect) {
         Point2D nearestRight = nearest(node.right, p, currentNearest, rightRect, switchComparator(comparator));
 
-        if (p.distanceTo(nearestRight) <= leftSubtreeRect.distanceTo(p))
+        if (p.distanceSquaredTo(nearestRight) <= leftSubtreeRect.distanceSquaredTo(p))
             return nearestRight;
         else {
             //search left subtree
