@@ -13,10 +13,10 @@
     <modules>
         <module>shared</module>
         <module>week1</module>
-        <module>week2</module>
-        <module>week3</module>
-        <module>week4</module>
-        <module>week5</module>
+        <!--<module>week2</module>-->
+        <!--<module>week3</module>-->
+        <!--<module>week4</module>-->
+        <!--<module>week5</module>-->
     </modules>
 
     <dependencies>
@@ -26,14 +26,6 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/../algs4.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>algorithms.part1</groupId>
-            <artifactId>stdlib</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../stdlib.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -50,8 +42,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -59,6 +51,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
+                <configuration>
+                    <!--<outputDirectory>/absolute/path/to/the/output/directory</outputDirectory>-->
+                    <finalName>${sourcesFinalName}</finalName>
+                    <attach>false</attach>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>attach-sources</id>

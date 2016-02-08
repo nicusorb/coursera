@@ -14,5 +14,7 @@
     <artifactId>week1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    
+    <properties>
+        <sourcesFinalName>percolation.zip</sourcesFinalName>
+    </properties>
 </project>
