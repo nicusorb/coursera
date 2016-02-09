@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class DequeTest {
-    private Deque<String> deque = new Deque<String>();
+    private Deque<String> deque = new Deque<>();
 
     @Test
     public void testAddFirst() throws Exception {

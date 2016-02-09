@@ -11,5 +11,9 @@
     </parent>
 
     <artifactId>week2</artifactId>
+    <name>Randomized Queues and Deques - week2</name>
 
+    <properties>
+        <sourcesFinalName>queues.zip</sourcesFinalName>
+    </properties>
 </project>

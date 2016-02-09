@@ -13,7 +13,7 @@
     <modules>
         <module>shared</module>
         <module>week1</module>
-        <!--<module>week2</module>-->
+        <module>week2</module>
         <!--<module>week3</module>-->
         <!--<module>week4</module>-->
         <!--<module>week5</module>-->
