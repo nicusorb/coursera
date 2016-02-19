@@ -7,7 +7,7 @@ import java.util.Collection;
 import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class BruteTest extends AbstractTest {
+public class BruteCollinearPointsIT extends AbstractTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
@@ -15,13 +15,13 @@ public class BruteTest extends AbstractTest {
                 {"input8.txt", "BruteOutput8.txt"}});
     }
 
-    public BruteTest(String inputFileToBeChecked, String correctOutput) {
+    public BruteCollinearPointsIT(String inputFileToBeChecked, String correctOutput) {
         super(inputFileToBeChecked, correctOutput);
     }
 
     @Override
     public void generateOutput() {
-        Brute brute = new Brute();
-        brute.main(new String[]{inputFileToBeChecked});
+        CollinearPointSampleClient sampleClient = new CollinearPointSampleClient();
+        sampleClient.main(new String[]{inputFileToBeChecked});
     }
 }

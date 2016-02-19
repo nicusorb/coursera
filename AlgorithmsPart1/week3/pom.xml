@@ -11,6 +11,11 @@
     </parent>
 
     <artifactId>week3</artifactId>
+    <name>Collinear Points - Pattern Recognition</name>
+
+    <properties>
+        <sourcesFinalName>collinear.zip</sourcesFinalName>
+    </properties>
 
     <dependencies>
         <dependency>

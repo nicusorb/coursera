@@ -41,12 +41,12 @@ public class PointTest {
     }
 
     @Test
-    public void test_SLOPE_ORDER() throws Exception {
+    public void test_slopeOrder() throws Exception {
         Point p0 = new Point(1, 2);
 
-        assertEquals(0, p0.SLOPE_ORDER.compare(new Point(3, 4), new Point(5, 6)));
-        assertEquals(-1, p0.SLOPE_ORDER.compare(new Point(1, 2), new Point(4, 5)));
-        assertEquals(-1, p0.SLOPE_ORDER.compare(new Point(3, 4), new Point(4, 6)));
-        assertEquals(1, p0.SLOPE_ORDER.compare(new Point(4, 6), new Point(3, 4)));
+        assertEquals(0, p0.slopeOrder().compare(new Point(3, 4), new Point(5, 6)));
+        assertEquals(-1, p0.slopeOrder().compare(new Point(1, 2), new Point(4, 5)));
+        assertEquals(-1, p0.slopeOrder().compare(new Point(3, 4), new Point(4, 6)));
+        assertEquals(1, p0.slopeOrder().compare(new Point(4, 6), new Point(3, 4)));
     }
 }
