@@ -118,20 +118,20 @@ public class Board {
 
     // string representation of the board (in the output format specified below)
     public String toString() {
-        String out = "";
-        out += dimension() + "\n";
+        StringBuilder out = new StringBuilder();
+        out.append(dimension() + "\n");
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
                 if (j < blocks[i].length - 1) {
-                    out += blocks[i][j] + " ";
+                    out.append(blocks[i][j] + " ");
                 } else {
-                    out += blocks[i][j];
+                    out.append(blocks[i][j]);
                 }
             }
-            out += "\n";
+            out.append("\n");
         }
 
-        return out;
+        return out.toString();
     }
 
     private int[][] clone(int[][] blocksToClone) {
@@ -201,8 +201,8 @@ public class Board {
         return new Board(twinBoardBlocks, true);
     }
 
-    private boolean emptyBlockFound(int[][] blocks, int row, int columnToExchange, int column) {
-        return blocks[row][columnToExchange] == 0 || blocks[row][column] == 0;
+    private boolean emptyBlockFound(int[][] block, int row, int columnToExchange, int column) {
+        return block[row][columnToExchange] == 0 || block[row][column] == 0;
     }
 
     private int findEmptyColumnLocation(int row) {

@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Stopwatch;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,9 +29,11 @@ public class PuzzleCheckerTest {
             }
 
             // solve the slider puzzle
+            Stopwatch stopwatch = new Stopwatch();
+            System.out.println("Trying to solve: " + file.getName());
             Board initial = new Board(tiles);
             Solver solver = new Solver(initial);
-            System.out.println(file.getName() + ": " + solver.moves());
+            System.out.println(file.getName() + ": " + solver.moves() + " in: " + stopwatch.elapsedTime());
         }
     }
 

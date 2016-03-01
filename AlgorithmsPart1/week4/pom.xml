@@ -22,6 +22,6 @@
     </dependencies>
 
     <build>
-        <finalName>8puzzle</finalName>
+        <finalName>8puzzle.zip</finalName>
     </build>
 </project>
