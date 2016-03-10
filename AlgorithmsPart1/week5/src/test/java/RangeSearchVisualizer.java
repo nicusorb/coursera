@@ -1,8 +1,7 @@
-/*************************************************************************
+/******************************************************************************
  *  Compilation:  javac RangeSearchVisualizer.java
  *  Execution:    java RangeSearchVisualizer input.txt
- *  Dependencies: PointSET.java KdTree.java Point2D.java RectHV.java
- *                StdDraw.java In.java
+ *  Dependencies: PointSET.java KdTree.java
  *
  *  Read points from a file (specified as a command-line arugment) and
  *  draw to standard draw. Also draw all of the points in the rectangle
@@ -11,7 +10,12 @@
  *  The range search results using the brute-force algorithm are drawn
  *  in red; the results using the kd-tree algorithms are drawn in blue.
  *
- *************************************************************************/
+ ******************************************************************************/
+
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class RangeSearchVisualizer {
 
@@ -19,7 +23,6 @@ public class RangeSearchVisualizer {
 
         String filename = args[0];
         In in = new In(filename);
-
 
         StdDraw.show(0);
 
@@ -69,7 +72,7 @@ public class RangeSearchVisualizer {
 
 
             RectHV rect = new RectHV(Math.min(x0, x1), Math.min(y0, y1),
-                                     Math.max(x0, x1), Math.max(y0, y1));
+                    Math.max(x0, x1), Math.max(y0, y1));
             // draw the points
             StdDraw.clear();
             StdDraw.setPenColor(StdDraw.BLACK);

@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.Point2D;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;

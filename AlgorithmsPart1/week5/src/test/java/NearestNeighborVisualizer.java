@@ -1,7 +1,7 @@
-/*************************************************************************
+/******************************************************************************
  *  Compilation:  javac NearestNeighborVisualizer.java
  *  Execution:    java NearestNeighborVisualizer input.txt
- *  Dependencies: PointSET.java KdTree.java Point2D.java In.java StdDraw.java
+ *  Dependencies: PointSET.java KdTree.java
  *
  *  Read points from a file (specified as a command-line argument) and
  *  draw to standard draw. Highlight the closest point to the mouse.
@@ -9,7 +9,11 @@
  *  The nearest neighbor according to the brute-force algorithm is drawn
  *  in red; the nearest neighbor using the kd-tree algorithm is drawn in blue.
  *
- *************************************************************************/
+ ******************************************************************************/
+
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class NearestNeighborVisualizer {
 
