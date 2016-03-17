@@ -14,6 +14,14 @@ public class KdTreeTest {
     }
 
     @Test
+    public void insertingAPointTwiceDoesNotModifySize() throws Exception {
+        sut.insert(new Point2D(0.1, 0.1));
+        sut.insert(new Point2D(0.1, 0.1));
+
+        assertThat(sut.size(), is(1));
+    }
+
+    @Test
     public void sizeOfEmptyTreeIsZero() throws Exception {
         assertThat(sut.size(), is(0));
     }
@@ -124,8 +132,8 @@ public class KdTreeTest {
 
     @Test
     public void nearestForHorizontalPoints() throws Exception {
-        Point2D p1 = new Point2D(1, 0);
-        Point2D p2 = new Point2D(2, 0);
+        Point2D p1 = new Point2D(0.1, 0);
+        Point2D p2 = new Point2D(0.2, 0);
 
         sut.insert(p1);
         sut.insert(p2);
@@ -135,8 +143,8 @@ public class KdTreeTest {
 
     @Test
     public void nearestForVerticalPoints() throws Exception {
-        Point2D p1 = new Point2D(1, 0);
-        Point2D p2 = new Point2D(1, 1);
+        Point2D p1 = new Point2D(0.1, 0);
+        Point2D p2 = new Point2D(0.1, 0.1);
 
         sut.insert(p1);
         sut.insert(p2);
@@ -146,9 +154,9 @@ public class KdTreeTest {
 
     @Test
     public void nearestForCustomPoints() throws Exception {
-        Point2D p1 = new Point2D(1, 1);
-        Point2D p2 = new Point2D(2, 2);
-        Point2D p3 = new Point2D(3, 5);
+        Point2D p1 = new Point2D(0.1, 0.1);
+        Point2D p2 = new Point2D(0.2, 0.2);
+        Point2D p3 = new Point2D(0.3, 0.5);
 
         sut.insert(p1);
         sut.insert(p2);
