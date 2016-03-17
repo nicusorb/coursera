@@ -59,24 +59,24 @@ public class KdTree {
             return node;
         if (shouldUseXCoordinate) {
             if (p.x() < node.p.x()) {
-                node.lb = put(node.lb, p, false);
+                node.lb = put(node.lb, p, !shouldUseXCoordinate);
                 if (node.lb.rect == null) {
                     node.lb.rect = new RectHV(node.rect.xmin(), node.rect.ymin(), node.p.x(), node.rect.ymax());
                 }
             } else {
-                node.rt = put(node.rt, p, false);
+                node.rt = put(node.rt, p, !shouldUseXCoordinate);
                 if (node.rt.rect == null) {
                     node.rt.rect = new RectHV(node.p.x(), node.rect.ymin(), node.rect.xmax(), node.rect.ymax());
                 }
             }
         } else {
             if (p.y() < node.p.y()) {
-                node.lb = put(node.lb, p, true);
+                node.lb = put(node.lb, p, !shouldUseXCoordinate);
                 if (node.lb.rect == null) {
                     node.lb.rect = new RectHV(node.rect.xmin(), node.rect.ymin(), node.rect.xmax(), node.p.y());
                 }
             } else {
-                node.rt = put(node.rt, p, true);
+                node.rt = put(node.rt, p, !shouldUseXCoordinate);
                 if (node.rt.rect == null) {
                     node.rt.rect = new RectHV(node.rect.xmin(), node.p.y(), node.rect.xmax(), node.rect.ymax());
                 }
