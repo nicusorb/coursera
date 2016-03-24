@@ -21,7 +21,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>algorithms.part1</groupId>
+            <groupId>edu.princeton.cs.algs4</groupId>
             <artifactId>algs4</artifactId>
             <version>1.0</version>
             <scope>system</scope>
