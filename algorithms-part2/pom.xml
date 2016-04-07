@@ -12,6 +12,7 @@
 
     <modules>
         <module>week1-WordNet</module>
+        <module>week2-SeamCarving</module>
     </modules>
 
     <dependencies>
