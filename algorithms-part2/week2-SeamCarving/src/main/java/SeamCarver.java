@@ -6,7 +6,6 @@ public class SeamCarver {
     private Picture picture;
     private double[][] energy;
     private boolean transposed;
-    private double[][] energyTransposed;
 
     // create a seam carver object based on the given picture
     public SeamCarver(Picture picture) {
@@ -48,8 +47,8 @@ public class SeamCarver {
         double[][] distTo = new double[height()][width()];
         int[][] edgeTo = new int[height()][width()];
 
-
-        return findVerticalSeam(distTo, edgeTo, energyTransposed);
+        transposed = true;
+        return findVerticalSeam(distTo, edgeTo);
     }
 
     // sequence of indices for vertical seam
@@ -57,7 +56,8 @@ public class SeamCarver {
         double[][] distTo = new double[width()][height()];
         int[][] edgeTo = new int[width()][height()];
 
-        return findVerticalSeam(distTo, edgeTo, energy);
+        transposed = false;
+        return findVerticalSeam(distTo, edgeTo);
     }
 
     // remove horizontal seam from current picture
@@ -71,10 +71,10 @@ public class SeamCarver {
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
         Picture newPicture = new Picture(width() - 1, height());
-        for (int i = 0; i < width() - 1; i++) {
-            for (int j = 0; j < height() - 1; j++) {
+        for (int j = 0; j < height(); j++) {
+            for (int i = 0; i < width() - 1; i++) {
                 if (i >= seam[j])
-                    newPicture.set(i, j, picture.get(i + 1, j + 1));
+                    newPicture.set(i, j, picture.get(i + 1, j));
                 else
                     newPicture.set(i, j, picture.get(i, j));
             }
@@ -85,12 +85,10 @@ public class SeamCarver {
 
     private void computeEnergyMatrix() {
         this.energy = new double[width()][height()];
-        this.energyTransposed = new double[height()][width()];
 
         for (int i = 0; i < energy.length; i++) {
             for (int j = 0; j < energy[i].length; j++) {
                 energy[i][j] = energy(i, j);
-                energyTransposed[j][i] = energy[i][j];
             }
         }
     }
@@ -114,9 +112,9 @@ public class SeamCarver {
         return Math.pow(rx, 2) + Math.pow(gx, 2) + Math.pow(bx, 2);
     }
 
-    private int[] findVerticalSeam(double[][] distTo, int[][] edgeTo, double[][] energyMatrix) {
+    private int[] findVerticalSeam(double[][] distTo, int[][] edgeTo) {
         init(distTo);
-        relaxAllEdgesBasedOnEnergyLevel(distTo, edgeTo, energyMatrix);
+        relaxAllEdgesBasedOnEnergyLevel(distTo, edgeTo);
 
         return getMinimumEnergySeam(distTo, edgeTo);
     }
@@ -129,30 +127,34 @@ public class SeamCarver {
         }
     }
 
-    private void relaxAllEdgesBasedOnEnergyLevel(double[][] distTo, int[][] edgeTo, double[][] energyMatrix) {
+    private void relaxAllEdgesBasedOnEnergyLevel(double[][] distTo, int[][] edgeTo) {
         final int width = distTo.length;
         final int height = distTo[0].length;
 
         for (int j = 0; j < width; j++) {
-            distTo[j][0] = energyMatrix[j][0];
+            distTo[j][0] = energyMatrix(j, 0);
         }
 
         for (int j = 0; j < height - 1; j++) {
             for (int i = 0; i < width; i++) {
-                if ((i - 1 >= 0) && (distTo[i - 1][j + 1] > distTo[i][j] + energyMatrix[i - 1][j + 1])) {
-                    distTo[i - 1][j + 1] = distTo[i][j] + energyMatrix[i - 1][j + 1];
+                if ((i - 1 >= 0) && (distTo[i - 1][j + 1] > distTo[i][j] + energyMatrix(i - 1, j + 1))) {
+                    distTo[i - 1][j + 1] = distTo[i][j] + energyMatrix(i - 1, j + 1);
                     edgeTo[i - 1][j + 1] = i;
                 }
-                if ((distTo[i][j + 1] > distTo[i][j] + energyMatrix[i][j + 1])) {
-                    distTo[i][j + 1] = distTo[i][j] + energyMatrix[i][j + 1];
+                if ((distTo[i][j + 1] > distTo[i][j] + energyMatrix(i, j + 1))) {
+                    distTo[i][j + 1] = distTo[i][j] + energyMatrix(i, j + 1);
                     edgeTo[i][j + 1] = i;
                 }
-                if ((i + 1 < width) && (distTo[i + 1][j + 1] > distTo[i][j] + energyMatrix[i + 1][j + 1])) {
-                    distTo[i + 1][j + 1] = distTo[i][j] + energyMatrix[i + 1][j + 1];
+                if ((i + 1 < width) && (distTo[i + 1][j + 1] > distTo[i][j] + energyMatrix(i + 1, j + 1))) {
+                    distTo[i + 1][j + 1] = distTo[i][j] + energyMatrix(i + 1, j + 1);
                     edgeTo[i + 1][j + 1] = i;
                 }
             }
         }
+    }
+
+    private double energyMatrix(int row, int col) {
+        return (transposed) ? energy[col][row] : energy[row][col];
     }
 
     private int[] getMinimumEnergySeam(double[][] distTo, int[][] edgeTo) {
@@ -193,9 +195,5 @@ public class SeamCarver {
             }
         }
         this.picture = newPicture;
-    }
-
-    private double energyMatrix(int row, int col) {
-        return (transposed) ? energy[col][row] : energy[row][col];
     }
 }
