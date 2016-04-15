@@ -11,7 +11,7 @@ public class SeamCarver {
     public SeamCarver(Picture picture) {
         if (picture == null)
             throw new NullPointerException();
-        this.picture = picture;
+        this.picture = new Picture(picture);
         computeEnergyMatrix();
     }
 
