@@ -14,6 +14,7 @@
         <module>week1-WordNet</module>
         <module>week2-SeamCarving</module>
         <module>week3-BaseballElimination</module>
+        <module>week4-Boggle</module>
     </modules>
 
     <dependencies>
