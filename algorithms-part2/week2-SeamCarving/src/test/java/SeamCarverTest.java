@@ -6,9 +6,6 @@ import java.io.File;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by nicubucalaete on 06/04/16.
- */
 public class SeamCarverTest {
 
     @Test(expected = NullPointerException.class)

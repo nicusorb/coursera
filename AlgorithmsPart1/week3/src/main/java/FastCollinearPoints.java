@@ -1,8 +1,5 @@
 import java.util.*;
 
-/**
- * Created by nicubucalaete on 16/02/16.
- */
 public class FastCollinearPoints {
     private List<LineSegment> segments = new ArrayList<>();
 

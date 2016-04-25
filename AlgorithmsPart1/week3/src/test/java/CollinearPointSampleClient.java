@@ -2,9 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-/**
- * Created by nicubucalaete on 16/02/16.
- */
 public class CollinearPointSampleClient {
     public static void main(String[] args) {
         // read the N points from a file

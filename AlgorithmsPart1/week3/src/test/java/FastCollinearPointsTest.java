@@ -1,8 +1,5 @@
 import org.junit.Test;
 
-/**
- * Created by nicubucalaete on 16/02/16.
- */
 public class FastCollinearPointsTest {
     private FastCollinearPoints sut;
     

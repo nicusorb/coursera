@@ -2,9 +2,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by nicubucalaete on 16/02/16.
- */
 public class BruteCollinearPoints {
     private List<LineSegment> lineSegments = new LinkedList<>();
 

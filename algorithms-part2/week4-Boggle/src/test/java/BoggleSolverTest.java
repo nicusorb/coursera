@@ -12,9 +12,6 @@ import java.util.Collection;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by nicubucalaete on 22/04/16.
- */
 @RunWith(Parameterized.class)
 public class BoggleSolverTest {
     private final String dictionary;
