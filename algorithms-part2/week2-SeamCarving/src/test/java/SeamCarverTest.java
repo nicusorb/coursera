@@ -68,4 +68,18 @@ public class SeamCarverTest {
         assertThat(sut.energy(1, 2), is(Math.sqrt(52024)));
         assertThat(sut.energy(1, 1), is(Math.sqrt(52225)));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeVerticalSeamThrowsExceptionIfTheSeamIsShorter() throws Exception {
+        SeamCarver sut = new SeamCarver(new Picture(10, 5));
+
+        sut.removeVerticalSeam(new int[]{1, 2, 3});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeVerticalSeamThrowsExceptionIfTheSeamIsLonger() throws Exception {
+        SeamCarver sut = new SeamCarver(new Picture(10, 5));
+
+        sut.removeVerticalSeam(new int[]{1, 2, 3, 4, 5, 6});
+    }
 }

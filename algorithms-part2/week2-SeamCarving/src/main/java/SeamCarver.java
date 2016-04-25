@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.Picture;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class SeamCarver {
     private Picture picture;
@@ -17,7 +17,7 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        return picture;
+        return new Picture(picture);
     }
 
     // width of current picture
@@ -70,6 +70,7 @@ public class SeamCarver {
 
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
+        validateSeam(seam);
         Picture newPicture = new Picture(width() - 1, height());
         for (int j = 0; j < height(); j++) {
             for (int i = 0; i < width() - 1; i++) {
@@ -195,5 +196,20 @@ public class SeamCarver {
             }
         }
         this.picture = newPicture;
+    }
+
+    private void validateSeam(int[] seam) {
+        if (seam.length != height())
+            throw new IllegalArgumentException("Wrong seam length.");
+        for (int i = 0; i < seam.length; i++) {
+            if (seam[i] < 0 || seam[i] >= width()) {
+                throw new IllegalArgumentException("Invalid seam entry: " + seam[i]);
+            }
+        }
+        for (int i = 0; i < seam.length - 1; i++) {
+            if (Math.abs(seam[i] - seam[i + 1]) > 1)
+                throw new IllegalArgumentException();
+        }
+
     }
 }
