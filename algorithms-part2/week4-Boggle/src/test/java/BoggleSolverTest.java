@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Stopwatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -25,7 +26,8 @@ public class BoggleSolverTest {
         return Arrays.asList(new Object[][]{
                 {"dictionary-algs4.txt", "board4x4.txt", 29},
                 {"dictionary-yawl.txt", "board4x4.txt", 204},
-                {"dictionary-yawl.txt", "board-points2.txt", 2}
+                {"dictionary-yawl.txt", "board-points2.txt", 2},
+                {"dictionary-zingarelli2005.txt", "board4x4.txt", 146}
         });
     }
 
@@ -41,7 +43,9 @@ public class BoggleSolverTest {
 
         BoggleSolver solver = new BoggleSolver(in.readAllLines());
 
+        Stopwatch stopwatch = new Stopwatch();
         Iterable<String> words = solver.getAllValidWords(new BoggleBoard(getClass().getClassLoader().getResource(board).toString()));
+        System.out.println("Elapsed time to getAllValidWords: " + stopwatch.elapsedTime());
 
         int count = 0;
         for (String word : words) {

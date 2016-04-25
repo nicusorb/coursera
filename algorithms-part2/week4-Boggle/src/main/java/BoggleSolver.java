@@ -1,25 +1,25 @@
-import edu.princeton.cs.algs4.TrieSET;
-
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public class BoggleSolver {
     private DeluxeTrieSET dictionary = new DeluxeTrieSET();
-    private Set<String> booggleWords = new LinkedHashSet<>();
+    private Set<String> boggleWords = new HashSet<>();
     private boolean[][] marked;
     private BoggleBoard board;
 
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
     public BoggleSolver(String[] dictionary) {
+//        Stopwatch stopwatch = new Stopwatch();
         for (String s : dictionary) {
             this.dictionary.add(s);
         }
+//        System.out.println("Elapsed time to create the dictionary: " + stopwatch.elapsedTime());
     }
 
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
-        booggleWords.clear();
+        boggleWords.clear();
         this.board = board;
         for (int i = 0; i < board.rows(); i++) {
             for (int j = 0; j < board.cols(); j++) {
@@ -27,7 +27,7 @@ public class BoggleSolver {
                 dfs(i, j, "");
             }
         }
-        return booggleWords;
+        return boggleWords;
     }
 
     private void dfs(int i, int j, String prefix) {
@@ -39,7 +39,7 @@ public class BoggleSolver {
                 return;
             }
             if (isValidWord(word))
-                booggleWords.add(word);
+                boggleWords.add(word);
             marked[i][j] = true;
             dfs(i - 1, j, word);
             dfs(i + 1, j, word);
