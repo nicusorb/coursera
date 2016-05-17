@@ -15,6 +15,7 @@
         <module>week2-SeamCarving</module>
         <module>week3-BaseballElimination</module>
         <module>week4-Boggle</module>
+        <module>week5-Burrows-Wheeler</module>
     </modules>
 
     <dependencies>
